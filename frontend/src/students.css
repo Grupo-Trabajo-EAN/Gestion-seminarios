@@ -1,0 +1,37 @@
+.students-container {
+    padding: 1rem;
+  }
+  
+  .students-actions {
+    margin-bottom: 1rem;
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .students-actions button {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    visibility: hidden;
+  }
+  
+  .students-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .students-table th,
+  .students-table td {
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+  }
+  
+  .students-table tr.selected {
+    background-color: #d0ebff;
+  }
+  
+  .students-table button {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+  }
+  
