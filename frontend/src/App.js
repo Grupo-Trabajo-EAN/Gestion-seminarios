@@ -4,6 +4,8 @@ import { useState } from 'react';
 import Login from './login';
 import Dashboard from './dashboard';
 import StudentLanding from './studentLanding'; 
+import ProfesoresList from './ProfesoresList';
+
 
 function App() {
   const [session, setSession] = useState(() => {
@@ -42,8 +44,19 @@ function App() {
             ) : (
               <Navigate to="/" />
             )
+          
           }
         />
+        <Route
+        path="/profesores"
+        element={
+          session && session.role === 'admin' ? (
+            <ProfesoresList />
+          ) : (
+            <Navigate to="/" />
+          )
+        }
+      />
         <Route
           path="/student"
           element={
