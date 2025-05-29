@@ -18,6 +18,7 @@
 --
 -- Table structure for table `estudiantes`
 --
+USE semilleros;
 
 DROP TABLE IF EXISTS `estudiantes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -31,7 +32,7 @@ CREATE TABLE `estudiantes` (
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`cliente_id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
