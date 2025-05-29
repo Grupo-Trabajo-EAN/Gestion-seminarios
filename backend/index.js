@@ -44,9 +44,15 @@ app.post('/login', (req, res) => {
   });
 });
 
-// Estudiantes routes
+
 const estudianteRoutes = require('./routes/estudiantes');
 app.use('/estudiantes', estudianteRoutes);
+
+
+const profesoresRoutes = require('./routes/profesores');
+app.use('/api/profesores', profesoresRoutes);
+
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
