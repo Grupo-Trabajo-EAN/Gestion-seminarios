@@ -52,6 +52,12 @@ app.use('/estudiantes', estudianteRoutes);
 const profesoresRoutes = require('./routes/profesores');
 app.use('/api/profesores', profesoresRoutes);
 
+const gruposInvestigacionRoutes = require('./routes/gruposInvestigacion');
+app.use('/api/grupos-investigacion', gruposInvestigacionRoutes);
+
+const semillerosRoutes = require('./routes/semilleros');
+app.use('/api/semilleros', semillerosRoutes);
+
 
 
 app.listen(PORT, () => {

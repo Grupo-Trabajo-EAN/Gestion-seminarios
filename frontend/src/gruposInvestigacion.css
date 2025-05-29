@@ -1,0 +1,70 @@
+.grupos-container {
+  padding: 1rem;
+}
+
+.grupos-actions {
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.grupos-actions button {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}
+
+.grupos-actions button:hover {
+  background-color: #e9ecef;
+}
+
+.grupos-actions button:disabled {
+  background-color: #e9ecef;
+  color: #6c757d;
+  cursor: not-allowed;
+}
+
+.grupos-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.grupos-table th,
+.grupos-table td {
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.grupos-table th {
+  background-color: #f8f9fa;
+  font-weight: bold;
+}
+
+.grupos-table tr:hover {
+  background-color: #f5f5f5;
+}
+
+.grupos-table tr.selected {
+  background-color: #d0ebff;
+}
+
+.grupos-table tr {
+  cursor: pointer;
+}
+
+.lineas-cell {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lineas-cell:hover {
+  white-space: normal;
+  word-wrap: break-word;
+}
