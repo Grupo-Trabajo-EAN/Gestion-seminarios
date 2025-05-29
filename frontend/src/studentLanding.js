@@ -79,7 +79,9 @@ function UploadForm() {
         />
 
         <div className="form-actions">
-          <button type="submit" className="btn primary">Subir</button>
+          <button type="submit" className="btn primary">
+            Subir
+          </button>
         </div>
 
         {alert === "success" && (
@@ -100,13 +102,15 @@ function StudentLanding({ nombre, onLogout }) {
   const renderContent = () => {
     if (view === "upload") return <UploadForm />;
     return (
-      <div className="greeting-card">
-        <h2>Portal del Estudiante</h2>
-        <p>
-          Has iniciado sesión exitosamente en el sistema de gestión de
-          seminarios.
-        </p>
-      </div>
+      <main className="student-content">
+        <div className="greeting-card">
+          <h2>Portal del Estudiante</h2>
+          <p>
+            Has iniciado sesión exitosamente en el sistema de gestión de
+            seminarios.
+          </p>
+        </div>
+      </main>
     );
   };
 
