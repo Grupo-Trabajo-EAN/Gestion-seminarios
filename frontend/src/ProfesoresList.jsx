@@ -42,7 +42,7 @@ function ProfesoresList() {
     })
       .then((res) => res.json())
       .then(() => {
-        setNuevoProfesor({ nombre: '', email: '', especialidad: '' });
+        setNuevoProfesor({ nombre: '', email: '', especialidad: '', id: '' });
         cargarProfesores();
       });
   };
