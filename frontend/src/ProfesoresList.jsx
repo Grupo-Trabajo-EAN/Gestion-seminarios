@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import './profesoreslist.css';
 
 function ProfesoresList() {
   const [profesores, setProfesores] = useState([]);
@@ -48,7 +49,14 @@ function ProfesoresList() {
   };
 
   if (loading) return <p>Cargando profesores...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (profesores.error || !profesores.length) return  <main className="profesor-content">
+        <div className="greeting-card">
+          <h2>Error</h2>
+          <p>
+            Error de conexión
+          </p>
+        </div>
+      </main>;
 
   return (
     <div>
@@ -64,7 +72,7 @@ function ProfesoresList() {
           </tr>
         </thead>
         <tbody>
-          {profesores.map((profesor) => (
+          {(!profesores.error || profesores.length) ? profesores?.map((profesor) => (
             <tr key={profesor.id}>
               <td>{profesor.id}</td>
               <td>{profesor.nombre}</td>
@@ -75,7 +83,7 @@ function ProfesoresList() {
                 <button>Eliminar</button>
               </td>
             </tr>
-          ))}
+          )): <h1>Informacion No disponible</h1>}
         </tbody>
       </table>
 

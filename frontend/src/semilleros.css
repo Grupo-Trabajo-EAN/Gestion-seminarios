@@ -108,3 +108,31 @@
     margin-bottom: 0.5rem;
   }
 }
+
+.semilleros-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 2rem;
+}
+
+.greeting-card {
+  background: white;
+  padding: 3rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  text-align: center;
+  max-width: 500px;
+}
+
+.greeting-card h2 {
+  color: #007bff;
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+}
+
+.greeting-card p {
+  color: #666;
+  font-size: 1.1rem;
+  line-height: 1.5;
+}

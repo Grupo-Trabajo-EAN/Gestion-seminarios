@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './semilleros.css';
 
 function Semilleros() {
@@ -28,7 +28,14 @@ function Semilleros() {
   }, []);
 
   if (loading) return <p>Cargando semilleros...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (error) return  <main className="semilleros-content">
+        <div className="greeting-card">
+          <h2>Error</h2>
+          <p>
+            Error de conexión
+          </p>
+        </div>
+      </main>;
 
   return (
     <div className="semilleros-container">
