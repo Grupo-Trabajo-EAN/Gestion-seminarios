@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './gruposInvestigacion.css';
 
 function GruposInvestigacion() {
@@ -28,7 +28,14 @@ function GruposInvestigacion() {
   }, []);
 
   if (loading) return <p>Cargando grupos de investigación...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (error) return  <main className="grupos-content">
+        <div className="greeting-card">
+          <h2>Error</h2>
+          <p>
+            Error de conexión
+          </p>
+        </div>
+      </main>;
 
   return (
     <div className="grupos-container">
