@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './students.css';
 
 function Students() {
   const [students, setStudents] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
+  const [loading, setLoading] = useState(true);
   
   useEffect(() => {
     const fetchStudents = async () => {
@@ -11,14 +12,25 @@ function Students() {
         const response = await fetch('http://localhost:4000/estudiantes');
         const data = await response.json();
         setStudents(data);
+        setLoading(false)
       } catch (error) {
         console.error('Failed to fetch students:', error);
+        setLoading(false)
       }
     };
 
     fetchStudents();
   }, []);
 
+  if (loading) return <p>Cargando estudiantes...</p>;
+  if (students.error || !students.length) return       <main className="student-content">
+        <div className="greeting-card">
+          <h2>Error</h2>
+          <p>
+            Error de conexión
+          </p>
+        </div>
+      </main>;
   return (
     <div className="students-container">
       <div className="students-actions">
@@ -47,7 +59,7 @@ function Students() {
         </tr>
         </thead>
         <tbody>
-            {students.map((s) => (
+            {(!students.error || students.length) ? students.map((s) => (
                 <tr
                 key={s.cliente_id}
                 className={s.cliente_id === selectedId ? 'selected' : ''}
@@ -65,7 +77,7 @@ function Students() {
                 <td>{s.nombre}</td>
                 <td>{s.username}</td>
                 </tr>
-            ))}
+            )): <h1>No hay informacion disponible</h1>}
             </tbody>
       </table>
     </div>
