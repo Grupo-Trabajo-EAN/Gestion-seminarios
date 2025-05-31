@@ -1,5 +1,5 @@
-use semilleros;
-drop table if exists plan_actividades.sql;
+USE semilleros;
+DROP TABLE IF EXISTS plan_actividades.sql;
 
 -- phpMyAdmin SQL Dump
 -- version 5.2.1
@@ -43,8 +43,8 @@ CREATE TABLE `plan_actividades` (
 
 INSERT INTO `plan_actividades` (`ID`, `Nombre`, `Informe`, `Semillero`) VALUES
 (1, 'Plan de Actividades 1 ', '', 1),
-(3, 'Plan 2', '', 1),
-(4, 'Plan 3', '', 3);
+(2, 'Plan 2', '', 1),
+(3, 'Plan 3', '', 3);
 
 --
 -- Indexes for dumped tables
