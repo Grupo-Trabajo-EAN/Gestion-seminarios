@@ -1,5 +1,5 @@
 USE semilleros;
-DROP TABLE IF EXISTS plan_actividades.sql;
+DROP TABLE IF EXISTS plan_actividades;
 
 -- phpMyAdmin SQL Dump
 -- version 5.2.1
