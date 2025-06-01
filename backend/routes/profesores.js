@@ -15,14 +15,15 @@ router.get('/', (req, res) => {
 
 
 router.post('/', (req, res) => {
-  const { nombre, email, especialidad } = req.body;
+  console.log('Datos recibidos en POST:', req.body);
+  const { nombre, apellido , identificacion, email, especialidad } = req.body;
 
-  if (!nombre || !email || !especialidad) {
+  if (!nombre || !apellido|| !identificacion|| !email || !especialidad) {
     return res.status(400).json({ error: 'Faltan datos para crear el profesor' });
   }
 
-  const query = 'INSERT INTO profesores (nombre, email, especialidad) VALUES (?, ?, ?)';
-  db.query(query, [nombre, email, especialidad], (err, results) => {
+  const query = 'INSERT INTO profesores (nombre,apellido, identificacion, email, especialidad) VALUES (?, ?, ?, ?, ?)';
+  db.query(query, [nombre, apellido, identificacion, email, especialidad], (err, results) => {
     if (err) {
       console.error('Error al insertar profesor:', err);
       return res.status(500).json({ error: 'Error al agregar el profesor' });
@@ -30,6 +31,8 @@ router.post('/', (req, res) => {
     res.status(201).json({
       id: results.insertId,
       nombre,
+      apellido,
+      identificacion,
       email,
       especialidad,
     });

@@ -8,6 +8,8 @@ function ProfesoresList() {
   
   const [nuevoProfesor, setNuevoProfesor] = useState({
     nombre: '',
+    apellido: '',
+    identificacion: '',
     email: '',
     especialidad: '',
   });
@@ -42,7 +44,7 @@ function ProfesoresList() {
     })
       .then((res) => res.json())
       .then(() => {
-        setNuevoProfesor({ nombre: '', email: '', especialidad: '', id: '' });
+        setNuevoProfesor({ nombre: '', apellido: '', identificacion:'', email: '', especialidad: '' });
         cargarProfesores();
       });
   };
@@ -58,6 +60,8 @@ function ProfesoresList() {
           <tr>
             <th>ID</th>
             <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Identificacion</th>
             <th>Email</th>
             <th>Especialidad</th>
             <th>Acciones</th>
@@ -68,6 +72,8 @@ function ProfesoresList() {
             <tr key={profesor.id}>
               <td>{profesor.id}</td>
               <td>{profesor.nombre}</td>
+              <td>{profesor.apellido}</td>
+              <td>{profesor.identificacion}</td>
               <td>{profesor.email}</td>
               <td>{profesor.especialidad}</td>
               <td>
@@ -85,6 +91,20 @@ function ProfesoresList() {
         name="nombre"
         placeholder="Nombre"
         value={nuevoProfesor.nombre}
+        onChange={handleChange}
+      />
+      <input
+        type="text"
+        name="apellido"
+        placeholder="Apellido"
+        value={nuevoProfesor.apellido}
+        onChange={handleChange}
+      />
+      <input
+        type="number"
+        name="identificacion"
+        placeholder="Identificacion"
+        value={nuevoProfesor.identificacion}
         onChange={handleChange}
       />
       <input
