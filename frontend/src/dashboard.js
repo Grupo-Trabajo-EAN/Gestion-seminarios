@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import './dashboard.css'; 
-import Students from './students';
+import Students from './EstudiantesList';
 import ProfesoresList from './ProfesoresList';
 import GruposInvestigacion from './gruposInvestigacion';
 import Semilleros from './semilleros';
+import EstudiantesList from './EstudiantesList';
 
 function Dashboard({ onLogout }) {
     const [view, setView] = useState('home');
 
     const renderContent = () => {
-        if (view === 'estudiantes') return <Students />;
+        if (view === 'estudiantes') return <EstudiantesList />;
         if (view === 'profesores') return <ProfesoresList />;
         if (view === 'grupos') return <GruposInvestigacion />;
         if (view === 'semilleros') return <Semilleros />;

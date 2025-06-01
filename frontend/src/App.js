@@ -5,6 +5,8 @@ import Login from './login';
 import Dashboard from './dashboard';
 import StudentLanding from './studentLanding'; 
 import ProfesoresList from './ProfesoresList';
+import EstudiantesList from './EstudiantesList';
+
 
 
 function App() {
@@ -56,6 +58,23 @@ function App() {
             <Navigate to="/" />
           )
         }
+
+        
+        
+      />
+      
+        <Route
+         path="/estudiantes"
+         element={
+            session && session.role === 'admin' ? (
+              <EstudiantesList />
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+
+        
+        
       />
         <Route
           path="/student"
