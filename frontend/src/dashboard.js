@@ -8,7 +8,6 @@ import Planes from "./planes";
 
 function Dashboard({ onLogout }) {
   const [view, setView] = useState("home");
-
   const handleChangeView = (newView) => {
     setView(newView);
   };
