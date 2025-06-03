@@ -19,7 +19,22 @@ router.get('/', (req, res) => {
   });
 });
 
-// POST /semilleros
+router.get('/:id', (req, res) => {
+  const { id } = req.params;
+  const query = `
+    SELECT s.nombre
+    FROM semilleros s where s.id = ${id}
+  `;
+  
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Error fetching nombre semillero:', err);
+      return res.status(500).json({ error: 'Fallo al recuperar el nombre del semillero' });
+    }
+    res.json(results);
+  });
+});
+
 router.post('/', (req, res) => {
   const { nombre, objetivo_principal, objetivos_especificos, grupo_investigacion_id } = req.body;
   
@@ -27,7 +42,6 @@ router.post('/', (req, res) => {
     return res.status(400).json({ error: 'Todos los campos son requeridos' });
   }
 
-  // First verify that the research group exists
   const checkGroupQuery = 'SELECT id FROM grupos_investigacion WHERE id = ?';
   
   db.query(checkGroupQuery, [grupo_investigacion_id], (err, groupResults) => {
@@ -58,7 +72,6 @@ router.post('/', (req, res) => {
   });
 });
 
-// PUT /semilleros/:id
 router.put('/:id', (req, res) => {
   const { id } = req.params;
   const { nombre, objetivo_principal, objetivos_especificos, grupo_investigacion_id } = req.body;
@@ -67,7 +80,6 @@ router.put('/:id', (req, res) => {
     return res.status(400).json({ error: 'Todos los campos son requeridos' });
   }
 
-  // First verify that the research group exists
   const checkGroupQuery = 'SELECT id FROM grupos_investigacion WHERE id = ?';
   
   db.query(checkGroupQuery, [grupo_investigacion_id], (err, groupResults) => {
@@ -103,7 +115,6 @@ router.put('/:id', (req, res) => {
   });
 });
 
-// DELETE /semilleros/:id
 router.delete('/:id', (req, res) => {
   const { id } = req.params;
   

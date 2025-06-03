@@ -1,24 +1,26 @@
-import { useEffect, useState } from 'react';
-import './gruposInvestigacion.css';
+import { useEffect, useState } from "react";
+import "./gruposInvestigacion.css";
 
 function GruposInvestigacion() {
   const [grupos, setGrupos] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   useEffect(() => {
     const fetchGrupos = async () => {
       try {
-        const response = await fetch('http://localhost:4000/api/grupos-investigacion');
+        const response = await fetch(
+          "http://localhost:4000/api/grupos-investigacion"
+        );
         if (!response.ok) {
-          throw new Error('Failed to fetch grupos de investigación');
+          throw new Error("Failed to fetch grupos de investigación");
         }
         const data = await response.json();
         setGrupos(data);
         setLoading(false);
       } catch (error) {
-        console.error('Failed to fetch grupos de investigación:', error);
+        console.error("Failed to fetch grupos de investigación:", error);
         setError(error.message);
         setLoading(false);
       }
@@ -28,19 +30,34 @@ function GruposInvestigacion() {
   }, []);
 
   if (loading) return <p>Cargando grupos de investigación...</p>;
-  if (error) return  <main className="grupos-content">
+  if (error)
+    return (
+      <main className="student-content">
         <div className="greeting-card">
           <h2>Error</h2>
-          <p>
-            Error de conexión
-          </p>
+          <p>Error de conexión</p>
         </div>
-      </main>;
+      </main>
+    );
+  else if (!grupos.length)
+    return (
+      <main className="student-content">
+        <div className="greeting-card">
+          <h2>Atención</h2>
+          <p>No hay grupos registrados</p>
+          <button onClick={() => alert("Agregar Grupo de Investigación")}>
+            Agregar Grupo
+          </button>
+        </div>
+      </main>
+    );
 
   return (
     <div className="grupos-container">
       <div className="grupos-actions">
-        <button onClick={() => alert('Agregar Grupo de Investigación')}>Agregar Grupo</button>
+        <button onClick={() => alert("Agregar Grupo de Investigación")}>
+          Agregar Grupo
+        </button>
         <button
           disabled={!selectedId}
           onClick={() => alert(`Editar grupo ${selectedId}`)}
@@ -71,7 +88,7 @@ function GruposInvestigacion() {
           {grupos.map((grupo) => (
             <tr
               key={grupo.id}
-              className={grupo.id === selectedId ? 'selected' : ''}
+              className={grupo.id === selectedId ? "selected" : ""}
               onClick={() => setSelectedId(grupo.id)}
             >
               <td>

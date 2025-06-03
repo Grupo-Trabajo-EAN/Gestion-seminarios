@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import './semilleros.css';
+import { useEffect, useState } from "react";
+import "./semilleros.css";
 
 function Semilleros() {
   const [semilleros, setSemilleros] = useState([]);
@@ -7,109 +7,127 @@ function Semilleros() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [nuevoPlan, setNuevoPlan] = useState({
-    nombre: '',
-    semillero: '',
+    nombre: "",
+    semillero: "",
   });
-const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    
     fetchSemilleros();
   }, []);
 
-const fetchSemilleros = async () => {
-      try {
-        const response = await fetch('http://localhost:4000/api/semilleros');
-        if (!response.ok) {
-          throw new Error('Failed to fetch semilleros');
-        }
-        const data = await response.json();
-        setSemilleros(data);
-        setLoading(false);
-      } catch (error) {
-        console.error('Failed to fetch semilleros:', error);
-        setError(error.message);
-        setLoading(false);
+  const fetchSemilleros = async () => {
+    try {
+      const response = await fetch("http://localhost:4000/api/semilleros");
+      if (!response.ok) {
+        throw new Error("Failed to fetch semilleros");
       }
-    };
+      const data = await response.json();
+      setSemilleros(data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Failed to fetch semilleros:", error);
+      setError(error.message);
+      setLoading(false);
+    }
+  };
 
-useEffect(() => {setNuevoPlan({...nuevoPlan,semillero:selectedId})
+  useEffect(() => {
+    setNuevoPlan({ ...nuevoPlan, semillero: selectedId });
   }, [selectedId]);
 
   if (loading) return <p>Cargando semilleros...</p>;
-  if (error) return  <main className="semilleros-content">
+  if (error)
+    return (
+      <main className="student-content">
         <div className="greeting-card">
           <h2>Error</h2>
-          <p>
-            Error de conexión
-          </p>
+          <p>Error de conexión</p>
         </div>
-      </main>;
+      </main>
+    );
+  else if (!semilleros.length)
+    return (
+      <main className="student-content">
+        <div className="greeting-card">
+          <h2>Atención</h2>
+          <p>No hay semilleros registrados</p>
+          <button onClick={() => alert("Agregar Semillero")}>
+            Agregar Semillero
+          </button>
+        </div>
+      </main>
+    );
 
-const openModal = () => {
+  const openModal = () => {
     if (selectedId) {
-      // Reset plan name for new entry and ensure semillero ID is current
-      setNuevoPlan({ nombre: '', semillero: selectedId });
+      setNuevoPlan({ nombre: "", semillero: selectedId });
       setIsModalOpen(true);
     } else {
-      alert('Por favor, seleccione un semillero de la tabla primero.');
+      alert("Por favor, seleccione un semillero de la tabla primero.");
     }
   };
 
-const closeModal = () => {
+  const closeModal = () => {
     setIsModalOpen(false);
-}
+  };
 
-const handlePlanNombreChange = (event) => {
+  const handlePlanNombreChange = (event) => {
     setNuevoPlan({ ...nuevoPlan, nombre: event.target.value });
   };
 
-  // This function will be called when the "Crear" button in the modal is clicked
   const handleCrearPlanSubmit = async () => {
     if (!nuevoPlan.nombre.trim()) {
-      alert('El nombre del plan de actividades no puede estar vacío.');
+      alert("El nombre del plan de actividades no puede estar vacío.");
       return;
     }
     if (!nuevoPlan.semillero) {
-      alert('Error: ID del semillero no está asignado. Seleccione un semillero.');
+      alert(
+        "Error: ID del semillero no está asignado. Seleccione un semillero."
+      );
       return;
     }
 
-    console.log('Enviando nuevo plan:', nuevoPlan);
+    console.log("Enviando nuevo plan:", nuevoPlan);
 
     try {
-      const response = await fetch('http://localhost:4000/api/planactividades', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(nuevoPlan),
-      });
+      const response = await fetch(
+        "http://localhost:4000/api/planactividades",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(nuevoPlan),
+        }
+      );
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ message: 'Error desconocido al crear el plan.' }));
-        throw new Error(errorData.message || `Error ${response.status} al crear el plan de actividades`);
+        const errorData = await response
+          .json()
+          .catch(() => ({ message: "Error desconocido al crear el plan." }));
+        throw new Error(
+          errorData.message ||
+            `Error ${response.status} al crear el plan de actividades`
+        );
       }
 
       const result = await response.json(); // Or handle as needed
-      console.log('Plan de actividades creado:', result);
+      console.log("Plan de actividades creado:", result);
 
-      // Reset form fields (keeping semillero ID if user might add another plan for same semillero)
-      // Or completely reset: setNuevoPlan({ nombre: '', semillero: '' });
-      setNuevoPlan({ nombre: '', semillero: selectedId });
-      // fetchSemilleros(); // Uncomment if creating a plan should refresh the semilleros list itself.
-                         // Typically, you might refresh a list of plans instead.
-      alert('Plan de actividades creado exitosamente!');
-      closeModal(); // Close modal on success
+      setNuevoPlan({ nombre: "", semillero: selectedId });
+      alert("Plan de actividades creado exitosamente!");
+      closeModal();
     } catch (err) {
-      console.error('Failed to create plan de actividades:', err);
+      console.error("Failed to create plan de actividades:", err);
       alert(`Error al crear el plan: ${err.message}`);
-      // setError(err.message); // Decide if this should overwrite the main error state
     }
   };
 
   return (
     <div className="semilleros-container">
       <div className="semilleros-actions">
-        <button onClick={() => alert('Agregar Semillero')}>Agregar Semillero</button>
+        <button onClick={() => alert("Agregar Semillero")}>
+          Agregar Semillero
+        </button>
         <button
           disabled={!selectedId}
           onClick={() => alert(`Editar semillero ${selectedId}`)}
@@ -145,7 +163,7 @@ const handlePlanNombreChange = (event) => {
           {semilleros.map((semillero) => (
             <tr
               key={semillero.id}
-              className={semillero.id === selectedId ? 'selected' : ''}
+              className={semillero.id === selectedId ? "selected" : ""}
               onClick={() => setSelectedId(semillero.id)}
             >
               <td>
@@ -159,11 +177,14 @@ const handlePlanNombreChange = (event) => {
               <td>{semillero.id}</td>
               <td>{semillero.nombre}</td>
               <td className="objetivo-cell">{semillero.objetivo_principal}</td>
-              <td className="objetivos-cell">{semillero.objetivos_especificos}</td>
+              <td className="objetivos-cell">
+                {semillero.objetivos_especificos}
+              </td>
               <td>
                 {semillero.grupo_nombre ? (
                   <span className="grupo-info">
-                    <strong>{semillero.grupo_codigo}</strong><br/>
+                    <strong>{semillero.grupo_codigo}</strong>
+                    <br />
                     {semillero.grupo_nombre}
                   </span>
                 ) : (
@@ -178,7 +199,11 @@ const handlePlanNombreChange = (event) => {
         <div className="modal-overlay">
           <div className="modal-content">
             <h2>Agregar Nuevo Plan de Actividades</h2>
-            <p>Para el semillero: {semilleros.find(s => s.id === selectedId)?.nombre || 'Desconocido'}</p>
+            <p>
+              Para el semillero:{" "}
+              {semilleros.find((s) => s.id === selectedId)?.nombre ||
+                "Desconocido"}
+            </p>
             <div>
               <label htmlFor="planNombre">Nombre del Plan:</label>
               <input
@@ -199,7 +224,5 @@ const handlePlanNombreChange = (event) => {
     </div>
   );
 }
-
-
 
 export default Semilleros;

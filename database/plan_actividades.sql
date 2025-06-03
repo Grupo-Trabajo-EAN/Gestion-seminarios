@@ -1,14 +1,13 @@
 USE semilleros;
-DROP TABLE IF EXISTS plan_actividades;
-
+DROP TABLE IF EXISTS `plan_actividades`;
 -- phpMyAdmin SQL Dump
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Jun 01, 2025 at 01:07 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Servidor: 127.0.0.1:33078
+-- Tiempo de generación: 03-06-2025 a las 07:31:44
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -21,13 +20,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `semilleros`
+-- Base de datos: `semilleros`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `plan_actividades`
+-- Estructura de tabla para la tabla `plan_actividades`
 --
 
 CREATE TABLE `plan_actividades` (
@@ -38,7 +37,7 @@ CREATE TABLE `plan_actividades` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `plan_actividades`
+-- Volcado de datos para la tabla `plan_actividades`
 --
 
 INSERT INTO `plan_actividades` (`ID`, `Nombre`, `Informe`, `Semillero`) VALUES
@@ -47,32 +46,32 @@ INSERT INTO `plan_actividades` (`ID`, `Nombre`, `Informe`, `Semillero`) VALUES
 (3, 'Plan 3', '', 3);
 
 --
--- Indexes for dumped tables
+-- Índices para tablas volcadas
 --
 
 --
--- Indexes for table `plan_actividades`
+-- Indices de la tabla `plan_actividades`
 --
 ALTER TABLE `plan_actividades`
   ADD PRIMARY KEY (`ID`),
   ADD KEY `ID` (`Semillero`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT de las tablas volcadas
 --
 
 --
--- AUTO_INCREMENT for table `plan_actividades`
+-- AUTO_INCREMENT de la tabla `plan_actividades`
 --
 ALTER TABLE `plan_actividades`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- Constraints for dumped tables
+-- Restricciones para tablas volcadas
 --
 
 --
--- Constraints for table `plan_actividades`
+-- Filtros para la tabla `plan_actividades`
 --
 ALTER TABLE `plan_actividades`
   ADD CONSTRAINT `plan_actividades_ibfk_1` FOREIGN KEY (`Semillero`) REFERENCES `semilleros` (`id`);

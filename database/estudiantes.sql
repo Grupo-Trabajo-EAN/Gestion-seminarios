@@ -1,148 +1,79 @@
--- MySQL dump 10.13  Distrib 8.0.42, for macos15 (arm64)
+USE semilleros;
+DROP TABLE IF EXISTS `estudiantes`;
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1    Database: semilleros
--- ------------------------------------------------------
--- Server version	8.0.32
+-- Servidor: 127.0.0.1:33078
+-- Tiempo de generación: 03-06-2025 a las 07:31:02
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.0.30
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
--- Table structure for table `estudiantes`
+-- Base de datos: `semilleros`
 --
-USE semilleros;
 
-DROP TABLE IF EXISTS `estudiantes`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `estudiantes`
+--
+
 CREATE TABLE `estudiantes` (
-  `cliente_id` int NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL,
   `username` varchar(50) NOT NULL,
   `password` varchar(255) NOT NULL,
   `nombre` varchar(100) NOT NULL,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`cliente_id`),
-  UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `apellido` varchar(50) NOT NULL,
+  `identificacion` int(11) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `carrera` varchar(100) NOT NULL,
+  `semestre` int(100) NOT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `estudiantes`
+-- Volcado de datos para la tabla `estudiantes`
 --
 
-LOCK TABLES `estudiantes` WRITE;
-/*!40000 ALTER TABLE `estudiantes` DISABLE KEYS */;
-INSERT INTO `estudiantes` VALUES (1,'juan123','password123','Juan Pérez','2025-05-27 17:08:52','2025-05-27 17:08:52'),(2,'maria456','mypass456','María González','2025-05-27 17:08:52','2025-05-27 17:08:52'),(3,'carlos789','secret789','Carlos Rodríguez','2025-05-27 17:08:52','2025-05-27 17:08:52');
-/*!40000 ALTER TABLE `estudiantes` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `estudiantes` (`id`, `username`, `password`, `nombre`, `apellido`, `identificacion`, `email`, `carrera`, `semestre`, `created_at`, `updated_at`) VALUES
+(1, 'pdelgad99203', '123456', 'Paula Catalina', 'Delgado Almendrales', 1001299203, 'pdelgad99203@universidadean.edu.co', 'ingenieria de sistemas', 5, '2025-06-03 05:09:33', '2025-06-03 05:15:08'),
+(2, 'juan123', 'password123', 'Juan', 'Perez', 12589842, 'juan123@universidadean.edu.co', 'Ingenieria industrial', 2, '2025-06-03 05:17:50', '2025-06-03 05:29:42'),
+(3, 'Jesus123', '123456', 'Jesus', 'Torres', 312545, 'Jesus123@universidadean.edu.co', 'ingenieria de sistemas', 8, '2025-06-03 05:20:19', '2025-06-03 05:20:32');
 
 --
--- Table structure for table `grupos_investigacion`
+-- Índices para tablas volcadas
 --
 
-DROP TABLE IF EXISTS `grupos_investigacion`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `grupos_investigacion` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `campo_investigacion` varchar(150) NOT NULL,
-  `categoria` varchar(100) NOT NULL,
-  `codigo` varchar(50) NOT NULL,
-  `lider` varchar(100) NOT NULL,
-  `lineas_investigacion` text NOT NULL,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `codigo` (`codigo`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+--
+-- Indices de la tabla `estudiantes`
+--
+ALTER TABLE `estudiantes`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `username` (`username`);
 
 --
--- Dumping data for table `grupos_investigacion`
+-- AUTO_INCREMENT de las tablas volcadas
 --
 
-LOCK TABLES `grupos_investigacion` WRITE;
-/*!40000 ALTER TABLE `grupos_investigacion` DISABLE KEYS */;
-INSERT INTO `grupos_investigacion` VALUES (1,'Inteligencia Artificial','A1','GIA-001','Dr. Carlos Mendoza','Machine Learning, Redes Neuronales, Procesamiento de Lenguaje Natural','2025-05-29 22:18:27','2025-05-29 22:18:27'),(2,'Biotecnología','A','GBT-002','Dra. María Elena Vargas','Ingeniería Genética, Bioinformática, Medicina Molecular','2025-05-29 22:18:27','2025-05-29 22:18:27'),(3,'Energías Renovables','B','GER-003','Prof. Luis Alberto Castro','Energía Solar, Energía Eólica, Biomasa','2025-05-29 22:18:27','2025-05-29 22:18:27'),(4,'Ciencias Sociales','C','GCS-004','Dra. Ana Patricia Ruiz','Sociología Urbana, Desarrollo Comunitario, Políticas Públicas','2025-05-29 22:18:27','2025-05-29 22:18:27'),(5,'Nanotecnología','A1','GNT-005','Dr. Roberto Jiménez','Nanomateriales, Nanoelectrónica, Nanomedicina','2025-05-29 22:18:27','2025-05-29 22:18:27'),(6,'Educación Digital','B','GED-006','Prof. Carmen López','E-learning, Tecnología Educativa, Realidad Virtual','2025-05-29 22:18:27','2025-05-29 22:18:27'),(7,'Cambio Climático','A','GCC-007','Dr. Fernando Morales','Modelado Climático, Adaptación, Mitigación de GEI','2025-05-29 22:18:27','2025-05-29 22:18:27'),(8,'Robótica','A1','GRB-008','Dra. Silvia Hernández','Robótica Industrial, Robótica Médica, Automatización','2025-05-29 22:18:27','2025-05-29 22:18:27');
-/*!40000 ALTER TABLE `grupos_investigacion` ENABLE KEYS */;
-UNLOCK TABLES;
-
 --
--- Table structure for table `profesores`
+-- AUTO_INCREMENT de la tabla `estudiantes`
 --
+ALTER TABLE `estudiantes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+COMMIT;
 
-DROP TABLE IF EXISTS `profesores`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `profesores` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(100) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `especialidad` varchar(100) NOT NULL,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `profesores`
---
-
-LOCK TABLES `profesores` WRITE;
-/*!40000 ALTER TABLE `profesores` DISABLE KEYS */;
-INSERT INTO `profesores` VALUES (1,'Dr. María González','maria.gonzalez@universidad.edu','Matemáticas','2025-05-29 21:00:16','2025-05-29 21:00:16'),(2,'Prof. Carlos Rodríguez','carlos.rodriguez@universidad.edu','Física','2025-05-29 21:00:16','2025-05-29 21:00:16'),(3,'Dra. Ana Martínez','ana.martinez@universidad.edu','Química','2025-05-29 21:00:16','2025-05-29 21:00:16'),(4,'Prof. Luis García','luis.garcia@universidad.edu','Biología','2025-05-29 21:00:16','2025-05-29 21:00:16'),(5,'Dr. Elena López','elena.lopez@universidad.edu','Historia','2025-05-29 21:00:16','2025-05-29 21:00:16'),(6,'Prof. Miguel Torres','miguel.torres@universidad.edu','Literatura','2025-05-29 21:00:16','2025-05-29 21:00:16'),(7,'Dra. Carmen Ruiz','carmen.ruiz@universidad.edu','Psicología','2025-05-29 21:00:16','2025-05-29 21:00:16'),(8,'Prof. David Sánchez','david.sanchez@universidad.edu','Informática','2025-05-29 21:00:16','2025-05-29 21:00:16');
-/*!40000 ALTER TABLE `profesores` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `semilleros`
---
-
-DROP TABLE IF EXISTS `semilleros`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `semilleros` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(150) NOT NULL,
-  `objetivo_principal` text NOT NULL,
-  `objetivos_especificos` text NOT NULL,
-  `grupo_investigacion_id` int NOT NULL,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `grupo_investigacion_id` (`grupo_investigacion_id`),
-  CONSTRAINT `semilleros_ibfk_1` FOREIGN KEY (`grupo_investigacion_id`) REFERENCES `grupos_investigacion` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `semilleros`
---
-
-LOCK TABLES `semilleros` WRITE;
-/*!40000 ALTER TABLE `semilleros` DISABLE KEYS */;
-INSERT INTO `semilleros` VALUES (1,'Semillero de Machine Learning','Desarrollar competencias en aprendizaje automático y aplicaciones de inteligencia artificial','Estudiar algoritmos de ML, Implementar proyectos prácticos, Participar en competencias de datos, Publicar artículos científicos',1,'2025-05-29 22:29:10','2025-05-29 22:29:10'),(2,'Semillero de Biotecnología Aplicada','Formar investigadores en biotecnología con enfoque en aplicaciones médicas y ambientales','Realizar experimentos de laboratorio, Desarrollar prototipos biotecnológicos, Colaborar con empresas del sector, Presentar en congresos',2,'2025-05-29 22:29:10','2025-05-29 22:29:10'),(3,'Semillero de Energías Limpias','Investigar y desarrollar tecnologías de energías renovables sostenibles','Diseñar sistemas solares, Evaluar eficiencia energética, Crear prototipos eólicos, Analizar impacto ambiental',3,'2025-05-29 22:29:10','2025-05-29 22:29:10'),(4,'Semillero de Innovación Social','Generar soluciones innovadoras para problemáticas sociales comunitarias','Identificar problemas sociales, Diseñar metodologías participativas, Implementar proyectos comunitarios, Evaluar impacto social',4,'2025-05-29 22:29:10','2025-05-29 22:29:10'),(5,'Semillero de Nanociencias','Explorar aplicaciones de la nanotecnología en diferentes campos científicos','Sintetizar nanomateriales, Caracterizar propiedades, Desarrollar aplicaciones médicas, Estudiar toxicidad',5,'2025-05-29 22:29:10','2025-05-29 22:29:10'),(6,'Semillero de Tecnología Educativa','Innovar en el uso de tecnologías para mejorar procesos de enseñanza-aprendizaje','Desarrollar aplicaciones educativas, Evaluar herramientas digitales, Capacitar docentes, Medir efectividad pedagógica',6,'2025-05-29 22:29:10','2025-05-29 22:29:10'),(7,'Semillero de Sostenibilidad Ambiental','Investigar estrategias de adaptación y mitigación del cambio climático','Monitorear variables climáticas, Modelar escenarios futuros, Proponer medidas de adaptación, Sensibilizar comunidades',7,'2025-05-29 22:29:10','2025-05-29 22:29:10'),(8,'Semillero de Robótica Educativa','Desarrollar competencias en robótica aplicada a la educación y la industria','Construir robots educativos, Programar sistemas autónomos, Participar en competencias, Crear talleres de robótica',8,'2025-05-29 22:29:10','2025-05-29 22:29:10');
-/*!40000 ALTER TABLE `semilleros` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2025-05-29 17:36:02

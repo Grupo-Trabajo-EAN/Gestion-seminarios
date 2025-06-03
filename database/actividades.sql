@@ -1,11 +1,11 @@
 USE semilleros;
-DROP TABLE IF EXISTS `profesores`;
+DROP TABLE IF EXISTS `actividades`;
 -- phpMyAdmin SQL Dump
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:33078
--- Tiempo de generación: 03-06-2025 a las 07:31:59
+-- Tiempo de generación: 03-06-2025 a las 07:30:30
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -26,45 +26,53 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `profesores`
+-- Estructura de tabla para la tabla `actividades`
 --
 
-CREATE TABLE `profesores` (
-  `id` int(11) NOT NULL,
-  `nombre` varchar(100) NOT NULL,
-  `apellido` varchar(100) NOT NULL,
-  `identificacion` int(50) NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `especialidad` varchar(100) DEFAULT NULL
+CREATE TABLE `actividades` (
+  `id` int(20) NOT NULL,
+  `nombre` varchar(50) NOT NULL,
+  `plan` int(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `profesores`
+-- Volcado de datos para la tabla `actividades`
 --
 
-INSERT INTO `profesores` (`id`, `nombre`, `apellido`, `identificacion`, `email`, `especialidad`) VALUES
-(1, 'jorge', 'bernal', 156456, 'jorge@gmail.com', 'calculo');
+INSERT INTO `actividades` (`id`, `nombre`, `plan`) VALUES
+(1, 'Actividad evaluativa', 2),
+(2, 'Actividad en grupo', 2);
 
 --
 -- Índices para tablas volcadas
 --
 
 --
--- Indices de la tabla `profesores`
+-- Indices de la tabla `actividades`
 --
-ALTER TABLE `profesores`
+ALTER TABLE `actividades`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `email` (`email`);
+  ADD KEY `id` (`plan`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
 
 --
--- AUTO_INCREMENT de la tabla `profesores`
+-- AUTO_INCREMENT de la tabla `actividades`
 --
-ALTER TABLE `profesores`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+ALTER TABLE `actividades`
+  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `actividades`
+--
+ALTER TABLE `actividades`
+  ADD CONSTRAINT `actividades_ibfk_1` FOREIGN KEY (`plan`) REFERENCES `plan_actividades` (`ID`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

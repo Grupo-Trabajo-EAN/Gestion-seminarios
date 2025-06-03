@@ -65,6 +65,9 @@ app.use('/api/semilleros', semillerosRoutes);
 const planesRoutes = require('./routes/planactividades');
 app.use('/api/planactividades', planesRoutes);
 
+const actividadRoutes = require('./routes/actividades');
+app.use('/api/actividades', actividadRoutes);
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

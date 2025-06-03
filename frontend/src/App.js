@@ -5,7 +5,7 @@ import Login from './login';
 import Dashboard from './dashboard';
 import StudentLanding from './studentLanding'; 
 import ProfesoresList from './ProfesoresList';
-import EstudiantesList from './EstudiantesList';
+import Students from './students';
 
 
 
@@ -67,7 +67,7 @@ function App() {
          path="/estudiantes"
          element={
             session && session.role === 'admin' ? (
-              <EstudiantesList />
+              <Students />
             ) : (
               <Navigate to="/" />
             )

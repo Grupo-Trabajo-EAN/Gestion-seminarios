@@ -51,14 +51,62 @@ function ProfesoresList() {
   };
 
   if (loading) return <p>Cargando profesores...</p>;
-  if (profesores.error || !profesores.length) return  <main className="profesor-content">
+  if (profesores.error)
+    return (
+      <main className="student-content">
         <div className="greeting-card">
           <h2>Error</h2>
-          <p>
-            Error de conexión
-          </p>
+          <p>Error de conexión</p>
         </div>
-      </main>;
+      </main>
+    );
+  else if (!profesores.length)
+    return (
+      <main className="student-content">
+        <div className="greeting-card">
+          <h2>Atención</h2>
+          <p>No hay profesores registrados</p>
+            <h3>Agregar nuevo profesor</h3>
+      <input
+        type="text"
+        name="nombre"
+        placeholder="Nombre"
+        value={nuevoProfesor.nombre}
+        onChange={handleChange}
+      />
+      <input
+        type="text"
+        name="apellido"
+        placeholder="Apellido"
+        value={nuevoProfesor.apellido}
+        onChange={handleChange}
+      />
+      <input
+        type="number"
+        name="identificacion"
+        placeholder="Identificacion"
+        value={nuevoProfesor.identificacion}
+        onChange={handleChange}
+      />
+      <input
+        type="email"
+        name="email"
+        placeholder="Correo"
+        value={nuevoProfesor.email}
+        onChange={handleChange}
+      />
+      <input
+        type="text"
+        name="especialidad"
+        placeholder="Especialidad"
+        value={nuevoProfesor.especialidad}
+        onChange={handleChange}
+      />
+      <button onClick={handleAgregar}>Agregar</button>
+        </div>
+        
+      </main>
+    );
 
   return (
     <div>
