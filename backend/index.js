@@ -46,11 +46,15 @@ app.post('/login', (req, res) => {
 
 
 const estudianteRoutes = require('./routes/estudiantes');
-app.use('/estudiantes', estudianteRoutes);
+app.use('/api/estudiantes', estudianteRoutes);
 
 
 const profesoresRoutes = require('./routes/profesores');
 app.use('/api/profesores', profesoresRoutes);
+
+const metodologiasRoutes = require('./routes/metodologias');
+app.use('/api/metodologias', metodologiasRoutes);
+
 
 const gruposInvestigacionRoutes = require('./routes/gruposInvestigacion');
 app.use('/api/grupos-investigacion', gruposInvestigacionRoutes);

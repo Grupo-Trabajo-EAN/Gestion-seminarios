@@ -2,12 +2,33 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db'); 
 
-// GET /estudiantes
-router.get('/', (req, res) => {
-  db.query('SELECT * FROM estudiantes', (err, results) => {
+// Crear estudiante
+router.post('/', (req, res) => {
+  const { nombre, apellido, identificacion, email, carrera, semestre } = req.body;
+
+  if (!nombre || !apellido || !identificacion || !email || !carrera || !semestre) {
+    return res.status(400).json({ error: 'Faltan datos obligatorios' });
+  }
+
+  const sql = `INSERT INTO estudiantes (nombre, apellido, identificacion, email, carrera, semestre) VALUES (?, ?, ?, ?, ?, ?)`;
+
+  db.query(sql, [nombre, apellido, identificacion, email, carrera, semestre], (err, result) => {
     if (err) {
-      console.error('Error fetching estudiantes:', err);
-      return res.status(500).json({ error: 'Fallo al recuperar los estudiantes' });
+      console.error(err);
+      return res.status(500).json({ error: 'Error al crear estudiante' });
+    }
+    res.status(201).json({ id: result.insertId, nombre, apellido, identificacion, email, carrera, semestre });
+  });
+});
+
+// Listar todos los estudiantes
+router.get('/', (req, res) => {
+  const sql = 'SELECT * FROM estudiantes';
+
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Error al obtener estudiantes' });
     }
     res.json(results);
   });
