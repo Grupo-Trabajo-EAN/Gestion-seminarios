@@ -1,27 +1,30 @@
 // App.js
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useState } from 'react';
-import Login from './login';
-import Dashboard from './dashboard';
-import StudentLanding from './studentLanding'; 
-import ProfesoresList from './ProfesoresList';
-import Students from './students';
-
-
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import { useState } from "react";
+import Login from "./login";
+import Dashboard from "./dashboard";
+import StudentLanding from "./studentLanding";
+import ProfesoresList from "./ProfesoresList";
+import Students from "./students";
 
 function App() {
   const [session, setSession] = useState(() => {
-    const stored = localStorage.getItem('session');
+    const stored = localStorage.getItem("session");
     return stored ? JSON.parse(stored) : null;
   });
 
   const handleLogin = (userSession) => {
-    localStorage.setItem('session', JSON.stringify(userSession));
+    localStorage.setItem("session", JSON.stringify(userSession));
     setSession(userSession);
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('session');
+    localStorage.removeItem("session");
     setSession(null);
   };
 
@@ -32,7 +35,11 @@ function App() {
           path="/"
           element={
             session ? (
-              session.role === 'admin' ? <Navigate to="/dashboard" /> : <Navigate to="/student" />
+              session.role === "admin" ? (
+                <Navigate to="/dashboard" />
+              ) : (
+                <Navigate to="/student" />
+              )
             ) : (
               <Login onLogin={handleLogin} />
             )
@@ -41,51 +48,49 @@ function App() {
         <Route
           path="/dashboard"
           element={
-            session && session.role === 'admin' ? (
+            session && session.role === "admin" ? (
               <Dashboard onLogout={handleLogout} />
             ) : (
               <Navigate to="/" />
             )
-          
           }
         />
         <Route
-        path="/profesores"
-        element={
-          session && session.role === 'admin' ? (
-            <ProfesoresList />
-          ) : (
-            <Navigate to="/" />
-          )
-        }
+          path="/profesores"
+          element={
+            session && session.role === "admin" ? (
+              <ProfesoresList />
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        />
 
-        
-        
-      />
-      
         <Route
-         path="/estudiantes"
-         element={
-            session && session.role === 'admin' ? (
+          path="/estudiantes"
+          element={
+            session && session.role === "admin" ? (
               <Students />
             ) : (
               <Navigate to="/" />
             )
           }
-
-        
-        
-      />
+        />
         <Route
           path="/student"
           element={
-            session && session.role === 'estudiante' ? (
-              <StudentLanding clientId={session.clientId} nombre={session.nombre} onLogout={handleLogout} />
+            session && session.role === "estudiante" ? (
+              <StudentLanding
+                username={session.username}
+                nombre={session.nombre}
+                onLogout={handleLogout}
+              />
             ) : (
               <Navigate to="/" />
             )
           }
         />
+
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>

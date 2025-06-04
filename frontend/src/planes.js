@@ -227,7 +227,37 @@ function Planes({ changeView }) {
                 )}
               </td>
               <td className="objetivos-cell">
-                {plan.Informe ? plan.Informe : "Sin informe subido"}
+                {plan.Informe ? (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.5rem",
+                    }}
+                  >
+                    <span>{plan.Informe}</span>
+                    <a
+                      href={`http://localhost:4000/api/estudiantes/informe/download/${plan.Informe}`}
+                      download
+                      title="Descargar"
+                      style={{ color: "#007bff", cursor: "pointer" }}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        fill="currentColor"
+                        className="bi bi-download"
+                        viewBox="0 0 16 16"
+                      >
+                        <path d="M.5 9.9a.5.5 0 0 1 .5.5V13a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.6a.5.5 0 0 1 1 0V13a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.6a.5.5 0 0 1 .5-.5z" />
+                        <path d="M5.354 8.354a.5.5 0 0 1 .707 0L8 10.293V1.5a.5.5 0 0 1 1 0v8.793l1.939-1.939a.5.5 0 1 1 .707.707l-2.646 2.647a.5.5 0 0 1-.708 0L5.354 9.061a.5.5 0 0 1 0-.707z" />
+                      </svg>
+                    </a>
+                  </div>
+                ) : (
+                  <span className="no-informe">Sin informe subido</span>
+                )}
               </td>
             </tr>
           ))}

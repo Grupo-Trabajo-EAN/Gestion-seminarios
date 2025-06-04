@@ -84,7 +84,7 @@
   font-size: 0.9em;
 }
 
-.no-actividad {
+.no-actividad, .no-informe {
   color: #6c757d;
   font-style: italic;
 }

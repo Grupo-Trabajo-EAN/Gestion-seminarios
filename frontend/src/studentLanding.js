@@ -1,13 +1,72 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./studentLanding.css";
 
 const ALLOWED_EXTENSIONS = ["pdf", "docx", "xlsx"];
 const DEFAULT_FILE_NAME = "Ningún archivo seleccionado";
 
-function UploadForm() {
+function StudentLanding({ username, nombre, onLogout }) {
+  const [view, setView] = useState("home");
+
+  const renderContent = () => {
+    if (view === "upload") return <UploadForm username={username} />;
+    return (
+      <main className="student-content">
+        <div className="greeting-card">
+          <h2>Portal del Estudiante</h2>
+          <p>
+            Has iniciado sesión exitosamente en el sistema de gestión de
+            seminarios.
+          </p>
+        </div>
+      </main>
+    );
+  };
+
+  return (
+    <div className="layout">
+      <header className="header">
+        <h1>Bienvenido, {nombre}!</h1>
+        <button className="logout" onClick={onLogout}>
+          Cerrar Sesión
+        </button>
+      </header>
+      <div className="content">
+        <aside className="sidebar">
+          <ul>
+            <li onClick={() => setView("home")}>Inicio</li>
+            <li onClick={() => setView("upload")}>Subir Informe</li>
+          </ul>
+        </aside>
+        <main className="main">{renderContent()}</main>
+      </div>
+    </div>
+  );
+}
+
+function UploadForm({ username }) {
   const fileInputRef = useRef(null);
   const [fileName, setFileName] = useState(DEFAULT_FILE_NAME);
-  const [alert, setAlert] = useState(null); // null, 'success', 'error'
+  const [alert, setAlert] = useState(null);
+  const [academicInfo, setAcademicInfo] = useState([]);
+  const planIdRef = useRef(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch(
+          `http://localhost:4000/api/estudiantes/informe/${username}`
+        );
+        const data = await res.json();
+        setAcademicInfo(data);
+        if (data.length > 0) {
+          planIdRef.current = data[0].plan_id;
+        }
+      } catch (error) {
+        console.error("Error obteniendo info académica:", error);
+      }
+    };
+    fetchData();
+  }, [username]);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -26,13 +85,31 @@ function UploadForm() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (fileName === DEFAULT_FILE_NAME) {
+    const file = fileInputRef.current.files[0];
+
+    if (!file || !planIdRef.current) {
       setAlert("error");
-    } else {
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("informe", file);
+
+    try {
+      await fetch(
+        `http://localhost:4000/api/estudiantes/informe/${planIdRef.current}`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
       setAlert("success");
       setTimeout(() => setAlert(null), 3000);
+    } catch (err) {
+      console.error("Error subiendo informe:", err);
+      setAlert("error");
     }
   };
 
@@ -57,7 +134,36 @@ function UploadForm() {
 
   return (
     <div className="form-wrapper">
-      <h2>Subir Informe</h2>
+      <h2 style={{ color: "#007bff", fontWeight: "bold" }}>Subir Informe</h2>
+
+      {academicInfo.length > 0 && (
+        <div
+          className="info-box"
+          style={{ textAlign: "left", marginBottom: "1.5rem" }}
+        >
+          <p>
+            <strong>Grupo de Investigación:</strong>{" "}
+            {academicInfo[0].campo_investigacion}
+          </p>
+          <p>
+            <strong>Semillero:</strong> {academicInfo[0].semillero}
+          </p>
+          <p>
+            <strong>Plan:</strong> {academicInfo[0].nombre_plan}
+          </p>
+          <p>
+            <strong>Actividades:</strong>
+          </p>
+          <ul>
+            {academicInfo
+              .filter((item) => item.actividad && item.actividad.trim() !== "")
+              .map((item, index) => (
+                <li key={index}>{item.actividad}</li>
+              ))}
+          </ul>
+        </div>
+      )}
+
       <form className="upload-form" onSubmit={handleSubmit}>
         <div
           className="upload-icon"
@@ -89,48 +195,10 @@ function UploadForm() {
         )}
         {alert === "error" && (
           <div className="error-message">
-            ❌ Formato inválido. Solo se permiten PDF, DOCX o XLSX.
+            ❌ Error: seleccione un archivo válido o intente nuevamente.
           </div>
         )}
       </form>
-    </div>
-  );
-}
-function StudentLanding({ nombre, onLogout }) {
-  const [view, setView] = useState("home");
-
-  const renderContent = () => {
-    if (view === "upload") return <UploadForm />;
-    return (
-      <main className="student-content">
-        <div className="greeting-card">
-          <h2>Portal del Estudiante</h2>
-          <p>
-            Has iniciado sesión exitosamente en el sistema de gestión de
-            seminarios.
-          </p>
-        </div>
-      </main>
-    );
-  };
-
-  return (
-    <div className="layout">
-      <header className="header">
-        <h1>Bienvenido, {nombre}!</h1>
-        <button className="logout" onClick={onLogout}>
-          Cerrar Sesión
-        </button>
-      </header>
-      <div className="content">
-        <aside className="sidebar">
-          <ul>
-            <li onClick={() => setView("home")}>Inicio</li>
-            <li onClick={() => setView("upload")}>Subir Informe</li>
-          </ul>
-        </aside>
-        <main className="main">{renderContent()}</main>
-      </div>
     </div>
   );
 }

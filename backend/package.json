@@ -12,6 +12,8 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^5.1.0",
+    "guia4backend": "file:",
+    "multer": "^2.0.1",
     "mysql2": "^3.14.0"
   }
 }
