@@ -1,15 +1,15 @@
 // App.js
+import { useState } from "react";
 import {
+  Navigate,
+  Route,
   BrowserRouter as Router,
   Routes,
-  Route,
-  Navigate,
 } from "react-router-dom";
-import { useState } from "react";
-import Login from "./login";
 import Dashboard from "./dashboard";
-import StudentLanding from "./studentLanding";
+import Login from "./login";
 import ProfesoresList from "./ProfesoresList";
+import StudentLanding from "./studentLanding";
 import Students from "./students";
 
 function App() {
@@ -49,7 +49,7 @@ function App() {
           path="/dashboard"
           element={
             session && session.role === "admin" ? (
-              <Dashboard onLogout={handleLogout} />
+              <Dashboard onLogout={handleLogout} rol={session.role}/>
             ) : (
               <Navigate to="/" />
             )
@@ -81,6 +81,7 @@ function App() {
           element={
             session && session.role === "estudiante" ? (
               <StudentLanding
+              rol={session.role}
                 username={session.username}
                 nombre={session.nombre}
                 onLogout={handleLogout}
