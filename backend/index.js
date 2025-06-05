@@ -32,13 +32,13 @@ app.post("/login", (req, res) => {
     }
 
     if (results.length === 1) {
-      const client = results[0];
+      const user = results[0];
       return res.json({
         success: true,
         role: "estudiante",
-        clientId: client.id,
-        nombre: client.nombre,
-        username: client.username,
+        id: user.id,
+        nombre: user.nombre,
+        username: user.username,
       });
     } else {
       return res

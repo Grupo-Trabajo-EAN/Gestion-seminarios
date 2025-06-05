@@ -15,7 +15,7 @@ INSERT INTO `profesores` (`id`, `nombre`, `apellido`, `identificacion`, `email`,
 
 DELETE FROM semillero_profesores;
 
-INSERT INTO `semillero_profesores` (`id`, `semillero_id`, `profesor_id`, `fecha_asignacion`, `rol`, `estado`, `horas_semanales`) VALUES
+INSERT INTO `semillero_profesores` (`id`, `semillero_id`, `profesor_id`, `fecha_asignacion`, `rol`, `estado`, `horas_semanales` , `created_at`, `updated_at`) VALUES
 -- Semillero 1 (Machine Learning) - 2 profesores
 (1, 1, 2, '2025-01-01', 'director', 'activo', 6, '2025-06-04 23:00:00', '2025-06-04 23:00:00'),
 (2, 1, 1, '2025-01-01', 'asesor', 'activo', 3, '2025-06-04 23:00:00', '2025-06-04 23:00:00'),

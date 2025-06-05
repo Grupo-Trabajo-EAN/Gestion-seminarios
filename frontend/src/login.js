@@ -22,7 +22,7 @@ function Login({ onLogin }) {
       if (response.ok) {
         onLogin({
           role: data.role,
-          clientId: data.clientId,
+          id: data.id,
           nombre: data.nombre,
           username: data.username,
         });

@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import "./dashboard.css";
-import Students from "./students";
+import { useState } from "react";
 import ProfesoresList from "./ProfesoresList";
+import "./dashboard.css";
 import GruposInvestigacion from "./gruposInvestigacion";
-import Semilleros from "./semilleros";
 import Planes from "./planes";
+import Semilleros from "./semilleros";
+import Students from "./students";
 
-function Dashboard({ onLogout }) {
+function Dashboard({ onLogout, rol }) {
   const [view, setView] = useState("home");
   const handleChangeView = (newView) => {
     setView(newView);
@@ -17,7 +17,7 @@ function Dashboard({ onLogout }) {
     if (view === "profesores") return <ProfesoresList />;
     if (view === "grupos") return <GruposInvestigacion />;
     if (view === "semilleros") return <Semilleros />;
-    if (view === "planes") return <Planes changeView={handleChangeView} />;
+    if (view === "planes") return <Planes changeView={handleChangeView} rol={rol} />;
     return <p>Selecciona una opción del menu lateral.</p>;
   };
 

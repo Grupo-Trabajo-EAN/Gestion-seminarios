@@ -1,14 +1,19 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import Planes from "./planes";
 import "./studentLanding.css";
 
 const ALLOWED_EXTENSIONS = ["pdf", "docx", "xlsx"];
 const DEFAULT_FILE_NAME = "Ningún archivo seleccionado";
 
-function StudentLanding({ username, nombre, onLogout }) {
+function StudentLanding({ username, nombre, onLogout, rol }) {
   const [view, setView] = useState("home");
-
+  const handleChangeView = (newView) => {
+    setView(newView);
+  };
+  
   const renderContent = () => {
     if (view === "upload") return <UploadForm username={username} />;
+    if (view === "planes") return <Planes changeView={handleChangeView} rol={rol} username={username}/>
     return (
       <main className="student-content">
         <div className="greeting-card">
@@ -35,6 +40,7 @@ function StudentLanding({ username, nombre, onLogout }) {
           <ul>
             <li onClick={() => setView("home")}>Inicio</li>
             <li onClick={() => setView("upload")}>Subir Informe</li>
+            <li onClick={() => setView("planes")}>Consultar Planes</li>
           </ul>
         </aside>
         <main className="main">{renderContent()}</main>
