@@ -1,13 +1,16 @@
-DROP DATABASE IF EXISTS semilleros;
+DROP DATABASE if EXISTS semilleros;
+
 CREATE DATABASE semilleros;
-USE semilleros 
+
+USE semilleros;
+
 
 -- phpMyAdmin SQL Dump
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:33078
--- Tiempo de generación: 06-06-2025 a las 01:03:54
+-- Tiempo de generación: 06-06-2025 a las 01:15:28
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -199,7 +202,7 @@ CREATE TABLE `plan_actividades` (
 
 INSERT INTO `plan_actividades` (`ID`, `Nombre`, `Informe`, `Semillero`) VALUES
 (1, 'Plan de Actividades 1 ', '', 1),
-(2, 'Plan 2', 'informe_1749072924152.pdf', 1),
+(2, 'Plan 2', '', 1),
 (3, 'Plan 3', '', 3),
 (4, 'plan prueba', '', 6);
 
@@ -260,8 +263,7 @@ INSERT INTO `semilleros` (`id`, `nombre`, `objetivo_principal`, `objetivos_espec
 (5, 'Semillero de Nanociencias', 'Explorar aplicaciones de la nanotecnología en diferentes campos científicos', 'Sintetizar nanomateriales, Caracterizar propiedades, Desarrollar aplicaciones médicas, Estudiar toxicidad', 5, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
 (6, 'Semillero de Tecnología Educativa', 'Innovar en el uso de tecnologías para mejorar procesos de enseñanza-aprendizaje', 'Desarrollar aplicaciones educativas, Evaluar herramientas digitales, Capacitar docentes, Medir efectividad pedagógica', 6, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
 (7, 'Semillero de Sostenibilidad Ambiental', 'Investigar estrategias de adaptación y mitigación del cambio climático', 'Monitorear variables climáticas, Modelar escenarios futuros, Proponer medidas de adaptación, Sensibilizar comunidades', 7, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
-(8, 'Semillero de Robótica Educativa', 'Desarrollar competencias en robótica aplicada a la educación y la industria', 'Construir robots educativos, Programar sistemas autónomos, Participar en competencias, Crear talleres de robótica', 8, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
-(9, 'investigacion corporativa', 'Consultar oportudinades laborales', 'na', 8, '2025-06-05 21:35:41', '2025-06-05 21:35:41');
+(8, 'Semillero de Robótica Educativa', 'Desarrollar competencias en robótica aplicada a la educación y la industria', 'Construir robots educativos, Programar sistemas autónomos, Participar en competencias, Crear talleres de robótica', 8, '2025-05-29 22:29:10', '2025-05-29 22:29:10');
 
 -- --------------------------------------------------------
 
@@ -302,9 +304,7 @@ INSERT INTO `semillero_estudiantes` (`id`, `semillero_id`, `estudiante_id`, `fec
 (15, 7, 2, '2025-02-20', 'activo', 'Investigador junior', '2025-06-05 04:00:00', '2025-06-05 04:00:00'),
 (16, 7, 3, '2025-03-20', 'activo', 'Investigador junior', '2025-06-05 04:00:00', '2025-06-05 04:00:00'),
 (17, 8, 1, '2025-02-01', 'activo', 'Líder estudiantil', '2025-06-05 04:00:00', '2025-06-05 04:00:00'),
-(18, 8, 2, '2025-02-25', 'activo', 'Investigador junior', '2025-06-05 04:00:00', '2025-06-05 04:00:00'),
-(19, 9, 1, '2025-06-05', 'activo', 'coordinador', '2025-06-05 21:35:41', '2025-06-05 21:35:41'),
-(20, 9, 2, '2025-06-05', 'activo', 'miembro', '2025-06-05 21:35:41', '2025-06-05 21:35:41');
+(18, 8, 2, '2025-02-25', 'activo', 'Investigador junior', '2025-06-05 04:00:00', '2025-06-05 04:00:00');
 
 --
 -- Disparadores `semillero_estudiantes`
@@ -365,16 +365,17 @@ CREATE TABLE `semillero_profesores` (
 --
 
 INSERT INTO `semillero_profesores` (`id`, `semillero_id`, `profesor_id`, `fecha_asignacion`, `rol`, `estado`, `horas_semanales`, `created_at`, `updated_at`) VALUES
-(1, 1, 2, '2025-01-01', 'director', 'activo', 6, '2025-06-05 23:02:15', '2025-06-05 23:02:15'),
-(2, 1, 1, '2025-01-01', 'asesor', 'activo', 3, '2025-06-05 23:02:36', '2025-06-05 23:02:36'),
-(3, 2, 3, '2025-01-01', 'director', 'activo', 5, '2025-06-05 23:02:36', '2025-06-05 23:02:36'),
-(4, 3, 4, '2025-01-01', 'director', 'activo', 4, '2025-06-05 23:02:36', '2025-06-05 23:02:36'),
-(5, 4, 5, '2025-01-01', 'director', 'activo', 4, '2025-06-05 23:02:36', '2025-06-05 23:02:36'),
-(6, 4, 1, '2025-01-01', 'colaborador', 'activo', 2, '2025-06-05 23:02:36', '2025-06-05 23:02:36'),
-(7, 5, 6, '2025-01-01', 'director', 'activo', 5, '2025-06-05 23:02:36', '2025-06-05 23:02:36'),
-(8, 6, 7, '2025-01-01', 'director', 'activo', 4, '2025-06-05 23:02:36', '2025-06-05 23:02:36'),
-(9, 9, 6, '2025-06-05', 'director', 'activo', 2, '2025-06-05 21:35:41', '2025-06-05 21:35:41'),
-(10, 9, 5, '2025-06-05', 'co-director', 'activo', 2, '2025-06-05 21:35:41', '2025-06-05 21:35:41');
+(1, 1, 2, '2025-01-01', 'director', 'activo', 6, '2025-06-05 04:00:00', '2025-06-05 04:00:00'),
+(2, 1, 1, '2025-01-01', 'asesor', 'activo', 3, '2025-06-05 04:00:00', '2025-06-05 04:00:00'),
+(3, 2, 3, '2025-01-01', 'director', 'activo', 5, '2025-06-05 04:00:00', '2025-06-05 04:00:00'),
+(4, 3, 4, '2025-01-01', 'director', 'activo', 4, '2025-06-05 04:00:00', '2025-06-05 04:00:00'),
+(5, 4, 5, '2025-01-01', 'director', 'activo', 4, '2025-06-05 04:00:00', '2025-06-05 04:00:00'),
+(6, 4, 1, '2025-01-01', 'colaborador', 'activo', 2, '2025-06-05 04:00:00', '2025-06-05 04:00:00'),
+(7, 5, 6, '2025-01-01', 'director', 'activo', 5, '2025-06-05 04:00:00', '2025-06-05 04:00:00'),
+(8, 6, 7, '2025-01-01', 'director', 'activo', 4, '2025-06-05 04:00:00', '2025-06-05 04:00:00'),
+(9, 7, 8, '2025-01-01', 'director', 'activo', 4, '2025-06-05 04:00:00', '2025-06-05 04:00:00'),
+(10, 8, 2, '2025-01-01', 'co-director', 'activo', 3, '2025-06-05 04:00:00', '2025-06-05 04:00:00'),
+(11, 8, 7, '2025-01-01', 'director', 'activo', 4, '2025-06-05 04:00:00', '2025-06-05 04:00:00');
 
 --
 -- Disparadores `semillero_profesores`
@@ -581,7 +582,7 @@ ALTER TABLE `actividades`
 -- AUTO_INCREMENT de la tabla `estudiantes`
 --
 ALTER TABLE `estudiantes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `grupos_investigacion`
@@ -605,19 +606,19 @@ ALTER TABLE `profesores`
 -- AUTO_INCREMENT de la tabla `semilleros`
 --
 ALTER TABLE `semilleros`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `semillero_estudiantes`
 --
 ALTER TABLE `semillero_estudiantes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `semillero_profesores`
 --
 ALTER TABLE `semillero_profesores`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- Restricciones para tablas volcadas
