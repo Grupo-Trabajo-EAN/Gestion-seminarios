@@ -104,7 +104,6 @@ router.put("/informe/:planId", (req, res) => {
 });
 
 const fs = require("fs");
-const path = require("path");
 
 // Crear carpeta /uploads si no existe
 const uploadDir = path.join(__dirname, "uploads");
