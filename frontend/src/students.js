@@ -124,7 +124,15 @@ function Students() {
   };
 
   if (loading) return <p>Cargando estudiantes...</p>;
-
+  if (students.error)
+    return (
+      <main className="student-content">
+        <div className="greeting-card">
+          <h2>Error</h2>
+          <p>Error de conexión</p>
+        </div>
+      </main>
+    );
   return (
     <div className="students-container">
       <div className="students-actions">
