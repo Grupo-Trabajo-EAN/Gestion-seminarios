@@ -2,18 +2,18 @@ import { useEffect, useState } from "react";
 import "./planes.css";
 
 const formatFecha = (fechaISO) => {
-  if (!fechaISO) return '';
+  if (!fechaISO) return "";
   const fecha = new Date(fechaISO);
-  return fecha.toLocaleDateString('es-CO', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
+  return fecha.toLocaleDateString("es-CO", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   });
 };
 
 function Planes({ changeView, rol, username }) {
   const [groupedPlans, setGroupedPlans] = useState({});
-  const [studentName, setStudentName] = useState('');
+  const [studentName, setStudentName] = useState("");
   const [planes, setPlanes] = useState([]);
   const [semillerosMap, setSemillerosMap] = useState({});
   const [actividadesMap, setActividadesMap] = useState({});
@@ -25,11 +25,11 @@ function Planes({ changeView, rol, username }) {
     plan: "",
   });
   const cardStyle = {
-    border: '1px solid #ccc',
-    borderRadius: '8px',
-    padding: '16px',
-    marginBottom: '16px',
-    boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+    border: "1px solid #ccc",
+    borderRadius: "8px",
+    padding: "16px",
+    marginBottom: "16px",
+    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
   };
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
@@ -39,23 +39,24 @@ function Planes({ changeView, rol, username }) {
     if (rol === "admin") {
       fetchPlanes();
       fetchSemilleros();
-    }
-    else {
+    } else {
       if (!username) {
         setLoading(false);
         setError("No se ha proporcionado un nombre de usuario.");
         return;
       }
-      fetchStudentData()
+      fetchStudentData();
     }
   }, []);
   const fetchStudentData = async () => {
     try {
       setLoading(true);
       // Usamos la URL completa que definimos
-      const response = await fetch(`http://localhost:4000/api/estudiantes/informe/${username}`);
+      const response = await fetch(
+        `http://localhost:4000/api/estudiantes/informe/${username}`
+      );
       if (!response.ok) {
-        throw new Error('Error al obtener los datos del estudiante');
+        throw new Error("Error al obtener los datos del estudiante");
       }
       const data = await response.json();
 
@@ -71,7 +72,7 @@ function Planes({ changeView, rol, username }) {
               plan_id: item.plan_id,
               nombre_plan: item.nombre_plan,
               semillero: item.semillero,
-              actividades: []
+              actividades: [],
             };
           }
           if (item.actividad) {
@@ -82,7 +83,6 @@ function Planes({ changeView, rol, username }) {
       }, {});
 
       setGroupedPlans(plans);
-
     } catch (err) {
       setError(err.message);
     } finally {
@@ -174,13 +174,17 @@ function Planes({ changeView, rol, username }) {
       alert("Por favor, seleccione un plan de la tabla primero.");
       return;
     }
-    const planSeleccionado = planes.find(p => p.ID === selectedId);
-    if (planSeleccionado && planSeleccionado.estado_aprobacion === 'aprobado') {
-      alert('Este plan ya ha sido aprobado.');
+    const planSeleccionado = planes.find((p) => p.ID === selectedId);
+    if (planSeleccionado && planSeleccionado.estado_aprobacion === "aprobado") {
+      alert("Este plan ya ha sido aprobado.");
       return;
     }
     // La lógica aquí también se beneficia del .split()
-    setAprobadores(planSeleccionado.aprobadores ? planSeleccionado.aprobadores.split('; ') : ['No hay profesores asignados']);
+    setAprobadores(
+      planSeleccionado.aprobadores
+        ? planSeleccionado.aprobadores.split("; ")
+        : ["No hay profesores asignados"]
+    );
     setIsConfirmOpen(true);
   };
 
@@ -188,9 +192,12 @@ function Planes({ changeView, rol, username }) {
 
   const handleConfirmarPlanSubmit = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/api/planactividades/${selectedId}/aprobar`, {
-        method: "POST",
-      });
+      const response = await fetch(
+        `http://localhost:4000/api/planactividades/${selectedId}/aprobar`,
+        {
+          method: "POST",
+        }
+      );
       if (!response.ok) throw new Error("Fallo al aprobar el plan.");
       alert("Plan aprobado exitosamente.");
       closeConfirm();
@@ -251,14 +258,20 @@ function Planes({ changeView, rol, username }) {
       alert(`Error al crear la actividad: ${err.message}`);
     }
   };
-
+  const infoCreate = () => {
+    alert("Para poder crear un plan debes seleccionar un semillero!");
+    alert(
+      "Serás redireccionado a semilleros para seleccionar el semillero correspondiente y agregar allí el plan directamente"
+    );
+    changeView("semilleros");
+  };
   const plansArray = Object.values(groupedPlans);
   return (
     <>
-      {(rol === "admin") ?
+      {rol === "admin" ? (
         <div className="planes-container">
           <div className="planes-actions">
-            <button onClick={() => changeView("semilleros")}>Agregar Plan</button>
+            <button onClick={() => infoCreate()}>Agregar Plan</button>
             <button
               disabled={!selectedId}
               onClick={() => alert(`Editar plan ${selectedId}`)}
@@ -319,11 +332,13 @@ function Planes({ changeView, rol, username }) {
                   <td>{semillerosMap[plan.Semillero] || "Cargando..."}</td>
                   <td>
                     {actividadesMap[plan.ID] &&
-                      actividadesMap[plan.ID].length > 0 ? (
+                    actividadesMap[plan.ID].length > 0 ? (
                       <ul className="actividad-info">
-                        {actividadesMap[plan.ID].map((nombreActividad, index) => (
-                          <li key={index}>{nombreActividad}</li>
-                        ))}
+                        {actividadesMap[plan.ID].map(
+                          (nombreActividad, index) => (
+                            <li key={index}>{nombreActividad}</li>
+                          )
+                        )}
                       </ul>
                     ) : (
                       <span className="no-actividad">
@@ -332,18 +347,32 @@ function Planes({ changeView, rol, username }) {
                     )}
                   </td>
                   <td>
-                    {plan.estado_aprobacion === 'aprobado' ? (
+                    {plan.estado_aprobacion === "aprobado" ? (
                       <ul className="estado-aprobado">
-                        {plan.aprobadores ? plan.aprobadores.split('; ').map((encargado, index) => (
-                          <li key={index}>{encargado}</li>
-                        )) : <li>Equipo del Semillero</li>}
+                        {plan.aprobadores ? (
+                          plan.aprobadores
+                            .split("; ")
+                            .map((encargado, index) => (
+                              <li key={index}>{encargado}</li>
+                            ))
+                        ) : (
+                          <li>Equipo del Semillero</li>
+                        )}
                       </ul>
                     ) : (
-                      <span className="estado-pendiente">Plan aún no aprobado</span>
+                      <span className="estado-pendiente">
+                        Plan aún no aprobado
+                      </span>
                     )}
                   </td>
                   <td>
-                    {plan.estado_aprobacion === 'aprobado' ? formatFecha(plan.fecha_aprobacion) : <span className="estado-pendiente">Plan aún no aprobado</span>}
+                    {plan.estado_aprobacion === "aprobado" ? (
+                      formatFecha(plan.fecha_aprobacion)
+                    ) : (
+                      <span className="estado-pendiente">
+                        Plan aún no aprobado
+                      </span>
+                    )}
                   </td>
                   <td className="objetivos-cell">
                     {plan.Informe ? (
@@ -388,7 +417,8 @@ function Planes({ changeView, rol, username }) {
                 <h2>Agregar Nueva actividad</h2>
                 <p>
                   Para el plan:{" "}
-                  {planes.find((s) => s.ID === selectedId)?.Nombre || "Desconocido"}
+                  {planes.find((s) => s.ID === selectedId)?.Nombre ||
+                    "Desconocido"}
                 </p>
                 <div>
                   <label htmlFor="planNombre">Nombre de la actividad:</label>
@@ -411,10 +441,17 @@ function Planes({ changeView, rol, username }) {
             <div className="modal-overlay">
               <div className="modal-content">
                 <h2>Confirmar Aprobación</h2>
-                <p>Estás a punto de aprobar el plan: <strong>{planes.find((p) => p.ID === selectedId)?.Nombre}</strong></p>
+                <p>
+                  Estás a punto de aprobar el plan:{" "}
+                  <strong>
+                    {planes.find((p) => p.ID === selectedId)?.Nombre}
+                  </strong>
+                </p>
                 <h4>Será aprobado en nombre de:</h4>
                 <ul>
-                  {aprobadores.map((nombre, index) => <li key={index}>{nombre}</li>)}
+                  {aprobadores.map((nombre, index) => (
+                    <li key={index}>{nombre}</li>
+                  ))}
                 </ul>
                 <div className="modal-actions">
                   <button onClick={handleConfirmarPlanSubmit}>Confirmar</button>
@@ -423,14 +460,17 @@ function Planes({ changeView, rol, username }) {
               </div>
             </div>
           )}
-        </div> :
-        (<div className="student-plans-container">
+        </div>
+      ) : (
+        <div className="student-plans-container">
           <h2>Planes de Actividades de: {studentName}</h2>
           {plansArray.length > 0 ? (
-            plansArray.map(plan => (
+            plansArray.map((plan) => (
               <div key={plan.plan_id} style={cardStyle}>
                 <h3>{plan.nombre_plan}</h3>
-                <p><strong>Semillero:</strong> {plan.semillero}</p>
+                <p>
+                  <strong>Semillero:</strong> {plan.semillero}
+                </p>
                 <h4>Actividades:</h4>
                 {plan.actividades.length > 0 ? (
                   <ul>
@@ -445,8 +485,9 @@ function Planes({ changeView, rol, username }) {
             ))
           ) : (
             <p>No tienes planes de actividades asignados.</p>
-          )} </div>
-        )}
+          )}{" "}
+        </div>
+      )}
     </>
   );
 }
