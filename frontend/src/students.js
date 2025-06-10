@@ -6,6 +6,7 @@ function Students() {
   const [selectedId, setSelectedId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modoEdicion, setModoEdicion] = useState(false);
 
   const [nuevoStudent, setNuevoStudent] = useState({
     nombre: "",
@@ -19,6 +20,7 @@ function Students() {
   useEffect(() => {
     fetchStudents();
   }, []);
+
   const fetchStudents = async () => {
     try {
       const response = await fetch("http://localhost:4000/api/estudiantes");
@@ -52,11 +54,56 @@ function Students() {
           carrera: "",
           semestre: "",
         });
-        alert("student creado exitosamente!");
+        alert("Estudiante creado exitosamente!");
         closeModal();
         fetchStudents();
       })
-      .catch((err) => {});
+      .catch((err) => {
+        console.error("Error al crear estudiante:", err);
+      });
+  };
+
+  const handleEditar = (id) => {
+    const estudiante = students.find((s) => s.id === id);
+    if (estudiante) {
+      setNuevoStudent(estudiante);
+      setModoEdicion(true);
+      setIsModalOpen(true);
+    }
+  };
+
+  const handleGuardarCambios = () => {
+    fetch(`http://localhost:4000/api/estudiantes/${nuevoStudent.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(nuevoStudent),
+    })
+      .then((res) => res.json())
+      .then(() => {
+        alert("Estudiante actualizado exitosamente!");
+        closeModal();
+        fetchStudents();
+      })
+      .catch((err) => {
+        console.error("Error al actualizar estudiante:", err);
+      });
+  };
+
+  const handleEliminar = (id) => {
+    if (window.confirm("¿Estás seguro de eliminar este estudiante?")) {
+      fetch(`http://localhost:4000/api/estudiantes/${id}`, {
+        method: "DELETE",
+      })
+        .then((res) => res.json())
+        .then(() => {
+          alert("Estudiante eliminado");
+          setSelectedId(null);
+          fetchStudents();
+        })
+        .catch((err) => {
+          console.error("Error al eliminar estudiante:", err);
+        });
+    }
   };
 
   const openModal = () => {
@@ -65,81 +112,18 @@ function Students() {
 
   const closeModal = () => {
     setIsModalOpen(false);
+    setModoEdicion(false);
+    setNuevoStudent({
+      nombre: "",
+      apellido: "",
+      identificacion: "",
+      email: "",
+      carrera: "",
+      semestre: "",
+    });
   };
 
-  if (loading) return <p>Cargando students...</p>;
-  if (students.error)
-    return (
-      <main className="student-content">
-        <div className="greeting-card">
-          <h2>Error</h2>
-          <p>Error de conexión</p>
-        </div>
-      </main>
-    );
-  else if (!students.length)
-    return (
-      <main className="student-content">
-        <div className="greeting-card">
-          <h2>Atención</h2>
-          <p>No hay estudiantes registrados</p>
-          <button onClick={openModal}>Agregar estudiante</button>
-          {isModalOpen && (
-            <div className="modal-overlay">
-              <div className="modal-content">
-                <h3>Agregar nuevo estudiante</h3>
-                <input
-                  type="text"
-                  name="nombre"
-                  placeholder="Nombre"
-                  value={nuevoStudent.nombre}
-                  onChange={handleChange}
-                />
-                <input
-                  type="text"
-                  name="apellido"
-                  placeholder="Apellido"
-                  value={nuevoStudent.apellido}
-                  onChange={handleChange}
-                />
-                <input
-                  type="number"
-                  name="identificacion"
-                  placeholder="Identificación"
-                  value={nuevoStudent.identificacion}
-                  onChange={handleChange}
-                />
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Correo"
-                  value={nuevoStudent.email}
-                  onChange={handleChange}
-                />
-                <input
-                  type="text"
-                  name="carrera"
-                  placeholder="Carrera"
-                  value={nuevoStudent.carrera}
-                  onChange={handleChange}
-                />
-                <input
-                  type="number"
-                  name="semestre"
-                  placeholder="Semestre"
-                  value={nuevoStudent.semestre}
-                  onChange={handleChange}
-                />
-                <div className="modal-actions">
-                  <button onClick={handleAgregar}>Crear</button>
-                  <button onClick={closeModal}>Cancelar</button>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </main>
-    );
+  if (loading) return <p>Cargando estudiantes...</p>;
 
   return (
     <div className="students-container">
@@ -147,15 +131,15 @@ function Students() {
         <button onClick={openModal}>Agregar estudiante</button>
         <button
           disabled={!selectedId}
-          onClick={() => alert(`Editar student ${selectedId}`)}
+          onClick={() => handleEditar(selectedId)}
         >
-          Edit Selected
+          Editar seleccionado
         </button>
         <button
           disabled={!selectedId}
-          onClick={() => alert(`Eliminar student ${selectedId}`)}
+          onClick={() => handleEliminar(selectedId)}
         >
-          Delete Selected
+          Eliminar seleccionado
         </button>
       </div>
 
@@ -172,27 +156,31 @@ function Students() {
           </tr>
         </thead>
         <tbody>
-          {!students.error || students.length ? (
-            students.map((s) => (
-              <tr key={s.id}>
-                <td>{s.id}</td>
-                <td>{s.nombre}</td>
-                <td>{s.apellido}</td>
-                <td>{s.identificacion}</td>
-                <td>{s.email}</td>
-                <td>{s.carrera}</td>
-                <td>{s.semestre}</td>
-              </tr>
-            ))
-          ) : (
-            <h1>No hay informacion disponible</h1>
-          )}
+          {students.map((s) => (
+            <tr
+              key={s.id}
+              onClick={() => setSelectedId(s.id)}
+              style={{
+                backgroundColor: selectedId === s.id ? "#eef" : "transparent",
+                cursor: "pointer",
+              }}
+            >
+              <td>{s.id}</td>
+              <td>{s.nombre}</td>
+              <td>{s.apellido}</td>
+              <td>{s.identificacion}</td>
+              <td>{s.email}</td>
+              <td>{s.carrera}</td>
+              <td>{s.semestre}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
+
       {isModalOpen && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <h3>Agregar nuevo estudiante</h3>
+            <h3>{modoEdicion ? "Editar estudiante" : "Agregar nuevo estudiante"}</h3>
             <input
               type="text"
               name="nombre"
@@ -236,7 +224,9 @@ function Students() {
               onChange={handleChange}
             />
             <div className="modal-actions">
-              <button onClick={handleAgregar}>Crear</button>
+              <button onClick={modoEdicion ? handleGuardarCambios : handleAgregar}>
+                {modoEdicion ? "Guardar cambios" : "Crear"}
+              </button>
               <button onClick={closeModal}>Cancelar</button>
             </div>
           </div>

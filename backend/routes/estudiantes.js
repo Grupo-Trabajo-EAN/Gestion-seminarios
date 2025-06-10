@@ -171,4 +171,42 @@ router.get("/informe/:username", (req, res) => {
 });
 
 
+
+
+router.put("/:id", (req, res) => {
+  const { id } = req.params;
+  const { nombre, apellido, identificacion, email, carrera, semestre } = req.body;
+
+  if (
+    !nombre ||
+    !apellido ||
+    !identificacion ||
+    !email ||
+    !carrera ||
+    !semestre
+  ) {
+    return res.status(400).json({ error: "Faltan datos para actualizar" });
+  }
+
+  const sql = `
+    UPDATE estudiantes
+    SET nombre = ?, apellido = ?, identificacion = ?, email = ?, carrera = ?, semestre = ?
+    WHERE id = ?
+  `;
+
+  db.query(
+    sql,
+    [nombre, apellido, identificacion, email, carrera, semestre, id],
+    (err, result) => {
+      if (err) {
+        console.error("Error al actualizar estudiante:", err);
+        return res.status(500).json({ error: "Error al actualizar estudiante" });
+      }
+      res.json({ success: true, message: "Estudiante actualizado correctamente" });
+    }
+  );
+});
+
+
+
 module.exports = router;
