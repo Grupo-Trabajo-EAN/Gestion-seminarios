@@ -1,6 +1,15 @@
 import { useEffect, useState } from "react";
 import "./planes.css";
 
+const formatFecha = (fechaISO) => {
+  if (!fechaISO) return '';
+  const fecha = new Date(fechaISO);
+  return fecha.toLocaleDateString('es-CO', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+};
 
 function Planes({ changeView, rol, username }) {
   const [groupedPlans, setGroupedPlans] = useState({});
@@ -16,13 +25,15 @@ function Planes({ changeView, rol, username }) {
     plan: "",
   });
   const cardStyle = {
-  border: '1px solid #ccc',
-  borderRadius: '8px',
-  padding: '16px',
-  marginBottom: '16px',
-  boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-};
+    border: '1px solid #ccc',
+    borderRadius: '8px',
+    padding: '16px',
+    marginBottom: '16px',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+  };
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [aprobadores, setAprobadores] = useState([]);
 
   useEffect(() => {
     if (rol === "admin") {
@@ -158,6 +169,38 @@ function Planes({ changeView, rol, username }) {
     }
   };
 
+  const openConfirm = async () => {
+    if (!selectedId) {
+      alert("Por favor, seleccione un plan de la tabla primero.");
+      return;
+    }
+    const planSeleccionado = planes.find(p => p.ID === selectedId);
+    if (planSeleccionado && planSeleccionado.estado_aprobacion === 'aprobado') {
+      alert('Este plan ya ha sido aprobado.');
+      return;
+    }
+    // La lógica aquí también se beneficia del .split()
+    setAprobadores(planSeleccionado.aprobadores ? planSeleccionado.aprobadores.split('; ') : ['No hay profesores asignados']);
+    setIsConfirmOpen(true);
+  };
+
+  const closeConfirm = () => setIsConfirmOpen(false);
+
+  const handleConfirmarPlanSubmit = async () => {
+    try {
+      const response = await fetch(`http://localhost:4000/api/planactividades/${selectedId}/aprobar`, {
+        method: "POST",
+      });
+      if (!response.ok) throw new Error("Fallo al aprobar el plan.");
+      alert("Plan aprobado exitosamente.");
+      closeConfirm();
+      fetchPlanes();
+    } catch (err) {
+      alert(`Error: ${err.message}`);
+      console.error(err);
+    }
+  };
+
   const closeModal = () => {
     setIsModalOpen(false);
   };
@@ -208,6 +251,7 @@ function Planes({ changeView, rol, username }) {
       alert(`Error al crear la actividad: ${err.message}`);
     }
   };
+
   const plansArray = Object.values(groupedPlans);
   return (
     <>
@@ -233,6 +277,13 @@ function Planes({ changeView, rol, username }) {
             >
               Agregar Actividad
             </button>
+
+            <button
+              disabled={!selectedId}
+              onClick={openConfirm} // Changed to open the modal
+            >
+              Aprobar
+            </button>
           </div>
 
           <table className="planes-table">
@@ -243,6 +294,8 @@ function Planes({ changeView, rol, username }) {
                 <th>Nombre</th>
                 <th>Semillero</th>
                 <th>Actividades</th>
+                <th>Aprobado por</th>
+                <th>Fecha de Aprobación</th>
                 <th>Informe</th>
               </tr>
             </thead>
@@ -277,6 +330,20 @@ function Planes({ changeView, rol, username }) {
                         Sin actividades asignadas
                       </span>
                     )}
+                  </td>
+                  <td>
+                    {plan.estado_aprobacion === 'aprobado' ? (
+                      <ul className="estado-aprobado">
+                        {plan.aprobadores ? plan.aprobadores.split('; ').map((encargado, index) => (
+                          <li key={index}>{encargado}</li>
+                        )) : <li>Equipo del Semillero</li>}
+                      </ul>
+                    ) : (
+                      <span className="estado-pendiente">Plan aún no aprobado</span>
+                    )}
+                  </td>
+                  <td>
+                    {plan.estado_aprobacion === 'aprobado' ? formatFecha(plan.fecha_aprobacion) : <span className="estado-pendiente">Plan aún no aprobado</span>}
                   </td>
                   <td className="objetivos-cell">
                     {plan.Informe ? (
@@ -336,6 +403,22 @@ function Planes({ changeView, rol, username }) {
                 <div className="modal-actions">
                   <button onClick={handleCrearPlanSubmit}>Crear</button>
                   <button onClick={closeModal}>Cancelar</button>
+                </div>
+              </div>
+            </div>
+          )}
+          {isConfirmOpen && (
+            <div className="modal-overlay">
+              <div className="modal-content">
+                <h2>Confirmar Aprobación</h2>
+                <p>Estás a punto de aprobar el plan: <strong>{planes.find((p) => p.ID === selectedId)?.Nombre}</strong></p>
+                <h4>Será aprobado en nombre de:</h4>
+                <ul>
+                  {aprobadores.map((nombre, index) => <li key={index}>{nombre}</li>)}
+                </ul>
+                <div className="modal-actions">
+                  <button onClick={handleConfirmarPlanSubmit}>Confirmar</button>
+                  <button onClick={closeConfirm}>Cancelar</button>
                 </div>
               </div>
             </div>
