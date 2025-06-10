@@ -1,12 +1,11 @@
 USE semilleros;
 DROP TABLE IF EXISTS `estudiantes`;
-
 -- phpMyAdmin SQL Dump
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:33078
--- Tiempo de generación: 04-06-2025 a las 23:08:28
+-- Tiempo de generación: 10-06-2025 a las 18:13:45
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -36,10 +35,11 @@ CREATE TABLE `estudiantes` (
   `password` varchar(255) NOT NULL,
   `nombre` varchar(100) NOT NULL,
   `apellido` varchar(50) NOT NULL,
-  `identificacion` int(11) NOT NULL,
+  `identificacion` varchar(20) DEFAULT NULL,
   `email` varchar(100) NOT NULL,
   `carrera` varchar(100) NOT NULL,
   `semestre` int(100) NOT NULL,
+  `Estado` varchar(150) NOT NULL DEFAULT 'Activo',
   `grupo_investigacion` int(20) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
@@ -49,10 +49,10 @@ CREATE TABLE `estudiantes` (
 -- Volcado de datos para la tabla `estudiantes`
 --
 
-INSERT INTO `estudiantes` (`id`, `username`, `password`, `nombre`, `apellido`, `identificacion`, `email`, `carrera`, `semestre`, `grupo_investigacion`, `created_at`, `updated_at`) VALUES
-(1, 'pdelgad99203', '123456', 'Paula Catalina', 'Delgado Almendrales', 1001299203, 'pdelgad99203@universidadean.edu.co', 'ingenieria de sistemas', 5, 1, '2025-06-03 05:09:33', '2025-06-04 20:25:11'),
-(2, 'juan123', 'password123', 'Juan', 'Perez', 12589842, 'juan123@universidadean.edu.co', 'Ingenieria industrial', 2, NULL, '2025-06-03 05:17:50', '2025-06-04 21:02:32'),
-(3, 'Jesus123', '123456', 'Jesus', 'Torres', 312545, 'Jesus123@universidadean.edu.co', 'ingenieria de sistemas', 8, NULL, '2025-06-03 05:20:19', '2025-06-04 21:02:39');
+INSERT INTO `estudiantes` (`id`, `username`, `password`, `nombre`, `apellido`, `identificacion`, `email`, `carrera`, `semestre`, `Estado`, `grupo_investigacion`, `created_at`, `updated_at`) VALUES
+(1, 'pdelgad99203', '123456', 'Paula Catalina', 'Delgado Almendrales', '1001299203', 'pdelgad99203@universidadean.edu.co', 'ingenieria de sistemas', 5, 'Activo', 1, '2025-06-03 05:09:33', '2025-06-04 20:25:11'),
+(2, 'juan123', 'password123', 'Juan', 'Perez', '12589842', 'juan123@universidadean.edu.co', 'Ingenieria industrial', 2, 'Activo', NULL, '2025-06-03 05:17:50', '2025-06-04 21:02:32'),
+(3, 'Jesus123', '123456', 'Jesus', 'Torres', '312545', 'Jesus123@universidadean.edu.co', 'ingenieria de sistemas', 8, 'Activo', NULL, '2025-06-03 05:20:19', '2025-06-04 21:02:39');
 
 --
 -- Índices para tablas volcadas
@@ -74,7 +74,7 @@ ALTER TABLE `estudiantes`
 -- AUTO_INCREMENT de la tabla `estudiantes`
 --
 ALTER TABLE `estudiantes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Restricciones para tablas volcadas
