@@ -146,6 +146,7 @@ function Students() {
       <table className="students-table">
         <thead>
           <tr>
+            <th></th>
             <th>ID</th>
             <th>Nombre</th>
             <th>Apellido</th>
@@ -165,6 +166,14 @@ function Students() {
                 cursor: "pointer",
               }}
             >
+              <td>
+                <input
+                  type="radio"
+                  name="id"
+                  checked={s.id === selectedId}
+                  onChange={() => setSelectedId(s.id)}
+                />
+              </td>
               <td>{s.id}</td>
               <td>{s.nombre}</td>
               <td>{s.apellido}</td>
