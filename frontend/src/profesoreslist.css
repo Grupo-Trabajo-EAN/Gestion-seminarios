@@ -1,4 +1,52 @@
-.profesor-content {
+.profesores-container {
+  padding: 1rem;
+}
+
+.profesores-actions {
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.profesores-actions button {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}
+
+.profesores-actions button:hover {
+  background-color: #e9ecef;
+}
+
+.profesores-actions button:disabled {
+  background-color: #e9ecef;
+  color: #6c757d;
+  cursor: not-allowed;
+}
+
+.profesores-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.profesores-table th,
+.profesores-table td {
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+}
+
+.profesores-table tr.selected {
+  background-color: #d0ebff;
+}
+
+.profesores-table tr {
+  cursor: pointer;
+}
+
+.student-content {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -9,7 +57,7 @@
   background: white;
   padding: 3rem;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   text-align: center;
   max-width: 500px;
 }
@@ -24,4 +72,99 @@
   color: #666;
   font-size: 1.1rem;
   line-height: 1.5;
+}
+
+/* === MODAL === */
+
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.modal-content p {
+  margin-bottom: 15px;
+  color: #555;
+  font-size: 0.9em;
+}
+
+.modal-content label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #444;
+}
+
+.modal-content input[type="text"],
+.modal-content input[type="number"],
+.modal-content input[type="email"] {
+  width: calc(100% - 22px);
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1em;
+}
+
+/* === BOTONES MODAL === */
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.modal-actions button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.95em;
+  transition: background-color 0.2s ease;
+}
+
+.modal-actions button:first-of-type {
+  background-color: #28a745;
+  color: white;
+}
+.modal-actions button:first-of-type:hover {
+  background-color: #218838;
+}
+
+.modal-actions button:last-of-type {
+  background-color: #6c757d;
+  color: white;
+}
+.modal-actions button:last-of-type:hover {
+  background-color: #5a6268;
+}
+
+/* === OPCIONAL: estilo diferente para confirmación === */
+.modal-content.confirm {
+  border-top: 6px solid #ffc107;
+}
+
+.modal-content.confirm h2 {
+  color: #d39e00;
 }
