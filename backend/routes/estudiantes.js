@@ -46,7 +46,7 @@ router.post("/", (req, res) => {
 
 // Listar todos los estudiantes
 router.get("/", (req, res) => {
-  const sql = "SELECT * FROM estudiantes";
+  const sql = "SELECT * FROM estudiantes where Estado = 'Activo'";
 
   db.query(sql, (err, results) => {
     if (err) {
@@ -171,6 +171,31 @@ router.get("/informe/:username", (req, res) => {
   });
 });
 
+router.put("/inhabilitar/:id", (req, res) => {
+  const { id } = req.params;
+  const { Estado } = req.body;
+
+  if (!Estado) {
+    return res.status(400).json({ error: "Se requiere el campo Estado" });
+  }
+
+  const query = "UPDATE estudiantes SET Estado = ? WHERE id = ?";
+  db.query(query, [Estado, id], (err, results) => {
+    if (err) {
+      console.error("Error al actualizar estudiante:", err);
+      return res
+        .status(500)
+        .json({ error: "Error al inhabilitar el estudiante" });
+    }
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ error: "estudiante no encontrado" });
+    }
+    res.json({ message: "estudiante inhabilitado correctamente" });
+  });
+});
+
+
+
 
 
 
@@ -238,6 +263,7 @@ router.delete("/:id", (req, res) => {
     });
   });
 });
+
 
 
 

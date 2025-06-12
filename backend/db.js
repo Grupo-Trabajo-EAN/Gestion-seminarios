@@ -5,7 +5,7 @@ const connection = mysql.createConnection({
   user: 'root',
   password: '',
   database: 'semilleros',
-    port: 3306,
+    port: 33078,
     decimalNumbers: true 
 });
 
