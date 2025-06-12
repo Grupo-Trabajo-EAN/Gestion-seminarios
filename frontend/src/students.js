@@ -7,6 +7,7 @@ function Students() {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modoEdicion, setModoEdicion] = useState(false);
+  const [notas, setNotas] = useState([]);
 
   const [nuevoStudent, setNuevoStudent] = useState({
     nombre: "",
@@ -20,6 +21,20 @@ function Students() {
   useEffect(() => {
     fetchStudents();
   }, []);
+
+  useEffect(() => {
+    if (selectedId) {
+      fetch(`http://localhost:4000/api/notas/estudiante/${selectedId}`)
+        .then((res) => res.json())
+        .then((data) => setNotas(data))
+        .catch((err) => {
+          console.error("Error al obtener notas:", err);
+          setNotas([]);
+        });
+    } else {
+      setNotas([]);
+    }
+  }, [selectedId]);
 
   const fetchStudents = async () => {
     try {
@@ -91,8 +106,10 @@ function Students() {
 
   const handleEliminar = (id) => {
     if (window.confirm("¿Estás seguro de eliminar este estudiante?")) {
-      fetch(`http://localhost:4000/api/estudiantes/${id}`, {
-        method: "DELETE",
+      fetch(`http://localhost:4000/api/estudiantes/inhabilitar/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ Estado: "Inactivo" }),
       })
         .then((res) => res.json())
         .then(() => {
@@ -133,6 +150,7 @@ function Students() {
         </div>
       </main>
     );
+
   return (
     <div className="students-container">
       <div className="students-actions">
@@ -247,6 +265,36 @@ function Students() {
               <button onClick={closeModal}>Cancelar</button>
             </div>
           </div>
+        </div>
+      )}
+
+      {selectedId && (
+        <div className="student-grades">
+          <h3>Notas del estudiante</h3>
+          {notas.length > 0 ? (
+            <table className="grades-table">
+              <thead>
+                <tr>
+                  <th>ID Nota</th>
+                  <th>Materia</th>
+                  <th>Nota</th>
+                  <th>Observaciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {notas.map((nota) => (
+                  <tr key={nota.id}>
+                    <td>{nota.id}</td>
+                    <td>{nota.materia}</td>
+                    <td>{nota.nota}</td>
+                    <td>{nota.observaciones}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p>No hay notas registradas para este estudiante.</p>
+          )}
         </div>
       )}
     </div>
