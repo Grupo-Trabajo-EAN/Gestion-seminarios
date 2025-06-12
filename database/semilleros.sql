@@ -8,10 +8,10 @@ USE semilleros;
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Jun 10, 2025 at 02:37 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Servidor: 127.0.0.1:33078
+-- Tiempo de generación: 10-06-2025 a las 18:09:52
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,12 +24,12 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `semilleros`
+-- Base de datos: `semilleros`
 --
 
 DELIMITER $$
 --
--- Procedures
+-- Procedimientos
 --
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ValidarReglasNegocioSemilleros` ()   BEGIN
     DECLARE done INT DEFAULT FALSE;
@@ -104,7 +104,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `actividades`
+-- Estructura de tabla para la tabla `actividades`
 --
 
 CREATE TABLE `actividades` (
@@ -114,7 +114,7 @@ CREATE TABLE `actividades` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `actividades`
+-- Volcado de datos para la tabla `actividades`
 --
 
 INSERT INTO `actividades` (`id`, `nombre`, `plan`) VALUES
@@ -124,7 +124,7 @@ INSERT INTO `actividades` (`id`, `nombre`, `plan`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `estudiantes`
+-- Estructura de tabla para la tabla `estudiantes`
 --
 
 CREATE TABLE `estudiantes` (
@@ -133,28 +133,29 @@ CREATE TABLE `estudiantes` (
   `password` varchar(255) NOT NULL,
   `nombre` varchar(100) NOT NULL,
   `apellido` varchar(50) NOT NULL,
-  `identificacion` int(11) NOT NULL,
+  `identificacion` varchar(20) DEFAULT NULL,
   `email` varchar(100) NOT NULL,
   `carrera` varchar(100) NOT NULL,
   `semestre` int(100) NOT NULL,
+  `Estado` varchar(150) NOT NULL DEFAULT 'Activo',
   `grupo_investigacion` int(20) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `estudiantes`
+-- Volcado de datos para la tabla `estudiantes`
 --
 
-INSERT INTO `estudiantes` (`id`, `username`, `password`, `nombre`, `apellido`, `identificacion`, `email`, `carrera`, `semestre`, `grupo_investigacion`, `created_at`, `updated_at`) VALUES
-(1, 'pdelgad99203', '123456', 'Paula Catalina', 'Delgado Almendrales', 1001299203, 'pdelgad99203@universidadean.edu.co', 'ingenieria de sistemas', 5, 1, '2025-06-03 05:09:33', '2025-06-04 20:25:11'),
-(2, 'juan123', 'password123', 'Juan', 'Perez', 12589842, 'juan123@universidadean.edu.co', 'Ingenieria industrial', 2, NULL, '2025-06-03 05:17:50', '2025-06-04 21:02:32'),
-(3, 'Jesus123', '123456', 'Jesus', 'Torres', 312545, 'Jesus123@universidadean.edu.co', 'ingenieria de sistemas', 8, NULL, '2025-06-03 05:20:19', '2025-06-04 21:02:39');
+INSERT INTO `estudiantes` (`id`, `username`, `password`, `nombre`, `apellido`, `identificacion`, `email`, `carrera`, `semestre`, `Estado`, `grupo_investigacion`, `created_at`, `updated_at`) VALUES
+(1, 'pdelgad99203', '123456', 'Paula Catalina', 'Delgado Almendrales', '1001299203', 'pdelgad99203@universidadean.edu.co', 'ingenieria de sistemas', 5, 'Activo', 1, '2025-06-03 05:09:33', '2025-06-04 20:25:11'),
+(2, 'juan123', 'password123', 'Juan', 'Perez', '12589842', 'juan123@universidadean.edu.co', 'Ingenieria industrial', 2, 'Activo', NULL, '2025-06-03 05:17:50', '2025-06-04 21:02:32'),
+(3, 'Jesus123', '123456', 'Jesus', 'Torres', '312545', 'Jesus123@universidadean.edu.co', 'ingenieria de sistemas', 8, 'Activo', NULL, '2025-06-03 05:20:19', '2025-06-04 21:02:39');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `grupos_investigacion`
+-- Estructura de tabla para la tabla `grupos_investigacion`
 --
 
 CREATE TABLE `grupos_investigacion` (
@@ -169,7 +170,7 @@ CREATE TABLE `grupos_investigacion` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `grupos_investigacion`
+-- Volcado de datos para la tabla `grupos_investigacion`
 --
 
 INSERT INTO `grupos_investigacion` (`id`, `campo_investigacion`, `categoria`, `codigo`, `lider`, `lineas_investigacion`, `created_at`, `updated_at`) VALUES
@@ -185,7 +186,7 @@ INSERT INTO `grupos_investigacion` (`id`, `campo_investigacion`, `categoria`, `c
 -- --------------------------------------------------------
 
 --
--- Table structure for table `plan_actividades`
+-- Estructura de tabla para la tabla `plan_actividades`
 --
 
 CREATE TABLE `plan_actividades` (
@@ -198,7 +199,7 @@ CREATE TABLE `plan_actividades` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `plan_actividades`
+-- Volcado de datos para la tabla `plan_actividades`
 --
 
 INSERT INTO `plan_actividades` (`ID`, `Nombre`, `Informe`, `Semillero`, `estado_aprobacion`, `fecha_aprobacion`) VALUES
@@ -210,36 +211,37 @@ INSERT INTO `plan_actividades` (`ID`, `Nombre`, `Informe`, `Semillero`, `estado_
 -- --------------------------------------------------------
 
 --
--- Table structure for table `profesores`
+-- Estructura de tabla para la tabla `profesores`
 --
 
 CREATE TABLE `profesores` (
   `id` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
   `apellido` varchar(100) NOT NULL,
-  `identificacion` int(50) NOT NULL,
+  `identificacion` varchar(20) DEFAULT NULL,
   `email` varchar(100) NOT NULL,
+  `Estado` varchar(150) NOT NULL DEFAULT 'Activo',
   `especialidad` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `profesores`
+-- Volcado de datos para la tabla `profesores`
 --
 
-INSERT INTO `profesores` (`id`, `nombre`, `apellido`, `identificacion`, `email`, `especialidad`) VALUES
-(1, 'jorge', 'bernal', 156456, 'jorge@gmail.com', 'calculo'),
-(2, 'María Elena', 'Rodríguez', 987654321, 'mrodriguez@universidad.edu.co', 'Inteligencia Artificial'),
-(3, 'Carlos Alberto', 'Mendoza', 456789123, 'cmendoza@universidad.edu.co', 'Biotecnología'),
-(4, 'Ana Patricia', 'García', 789123456, 'agarcia@universidad.edu.co', 'Energías Renovables'),
-(5, 'Luis Fernando', 'López', 321654987, 'llopez@universidad.edu.co', 'Ciencias Sociales'),
-(6, 'Sandra Milena', 'Vargas', 654987321, 'svargas@universidad.edu.co', 'Nanotecnología'),
-(7, 'Roberto Carlos', 'Jiménez', 147258369, 'rjimenez@universidad.edu.co', 'Tecnología Educativa'),
-(8, 'Diana Carolina', 'Morales', 963852741, 'dmorales@universidad.edu.co', 'Medio Ambiente');
+INSERT INTO `profesores` (`id`, `nombre`, `apellido`, `identificacion`, `email`, `Estado`, `especialidad`) VALUES
+(1, 'jorge', 'bernal', '156456', 'jorge@gmail.com', 'Activo', 'calculo'),
+(2, 'María Elena', 'Rodríguez', '987654321', 'mrodriguez@universidad.edu.co', 'Activo', 'Inteligencia Artificial'),
+(3, 'Carlos Alberto', 'Mendoza', '456789123', 'cmendoza@universidad.edu.co', 'Activo', 'Biotecnología'),
+(4, 'Ana Patricia', 'García', '789123456', 'agarcia@universidad.edu.co', 'Activo', 'Energías Renovables'),
+(5, 'Luis Fernando', 'López', '321654987', 'llopez@universidad.edu.co', 'Activo', 'Ciencias Sociales'),
+(6, 'Sandra Milena', 'Vargas', '654987321', 'svargas@universidad.edu.co', 'Activo', 'Nanotecnología'),
+(7, 'Roberto Carlos', 'Jiménez', '147258369', 'rjimenez@universidad.edu.co', 'Activo', 'Tecnología Educativa'),
+(8, 'Diana Carolina', 'Morales', '963852741', 'dmorales@universidad.edu.co', 'Activo', 'Medio Ambiente');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `semilleros`
+-- Estructura de tabla para la tabla `semilleros`
 --
 
 CREATE TABLE `semilleros` (
@@ -253,7 +255,7 @@ CREATE TABLE `semilleros` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `semilleros`
+-- Volcado de datos para la tabla `semilleros`
 --
 
 INSERT INTO `semilleros` (`id`, `nombre`, `objetivo_principal`, `objetivos_especificos`, `grupo_investigacion_id`, `created_at`, `updated_at`) VALUES
@@ -269,7 +271,7 @@ INSERT INTO `semilleros` (`id`, `nombre`, `objetivo_principal`, `objetivos_espec
 -- --------------------------------------------------------
 
 --
--- Table structure for table `semillero_estudiantes`
+-- Estructura de tabla para la tabla `semillero_estudiantes`
 --
 
 CREATE TABLE `semillero_estudiantes` (
@@ -284,7 +286,7 @@ CREATE TABLE `semillero_estudiantes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `semillero_estudiantes`
+-- Volcado de datos para la tabla `semillero_estudiantes`
 --
 
 INSERT INTO `semillero_estudiantes` (`id`, `semillero_id`, `estudiante_id`, `fecha_ingreso`, `estado`, `rol`, `created_at`, `updated_at`) VALUES
@@ -308,7 +310,7 @@ INSERT INTO `semillero_estudiantes` (`id`, `semillero_id`, `estudiante_id`, `fec
 (18, 8, 2, '2025-02-25', 'activo', 'Investigador junior', '2025-06-05 04:00:00', '2025-06-05 04:00:00');
 
 --
--- Triggers `semillero_estudiantes`
+-- Disparadores `semillero_estudiantes`
 --
 DELIMITER $$
 CREATE TRIGGER `validate_min_students_before_delete` BEFORE DELETE ON `semillero_estudiantes` FOR EACH ROW BEGIN
@@ -346,7 +348,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `semillero_profesores`
+-- Estructura de tabla para la tabla `semillero_profesores`
 --
 
 CREATE TABLE `semillero_profesores` (
@@ -362,7 +364,7 @@ CREATE TABLE `semillero_profesores` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `semillero_profesores`
+-- Volcado de datos para la tabla `semillero_profesores`
 --
 
 INSERT INTO `semillero_profesores` (`id`, `semillero_id`, `profesor_id`, `fecha_asignacion`, `rol`, `estado`, `horas_semanales`, `created_at`, `updated_at`) VALUES
@@ -379,7 +381,7 @@ INSERT INTO `semillero_profesores` (`id`, `semillero_id`, `profesor_id`, `fecha_
 (11, 8, 7, '2025-01-01', 'director', 'activo', 4, '2025-06-05 04:00:00', '2025-06-05 04:00:00');
 
 --
--- Triggers `semillero_profesores`
+-- Disparadores `semillero_profesores`
 --
 DELIMITER $$
 CREATE TRIGGER `validate_min_professors_before_delete` BEFORE DELETE ON `semillero_profesores` FOR EACH ROW BEGIN
@@ -417,8 +419,8 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Stand-in structure for view `vista_estudiantes_por_semillero`
--- (See below for the actual view)
+-- Estructura Stand-in para la vista `vista_estudiantes_por_semillero`
+-- (Véase abajo para la vista actual)
 --
 CREATE TABLE `vista_estudiantes_por_semillero` (
 `semillero_id` int(11)
@@ -437,8 +439,8 @@ CREATE TABLE `vista_estudiantes_por_semillero` (
 -- --------------------------------------------------------
 
 --
--- Stand-in structure for view `vista_profesores_por_semillero`
--- (See below for the actual view)
+-- Estructura Stand-in para la vista `vista_profesores_por_semillero`
+-- (Véase abajo para la vista actual)
 --
 CREATE TABLE `vista_profesores_por_semillero` (
 `semillero_id` int(11)
@@ -457,8 +459,8 @@ CREATE TABLE `vista_profesores_por_semillero` (
 -- --------------------------------------------------------
 
 --
--- Stand-in structure for view `vista_semilleros_completa`
--- (See below for the actual view)
+-- Estructura Stand-in para la vista `vista_semilleros_completa`
+-- (Véase abajo para la vista actual)
 --
 CREATE TABLE `vista_semilleros_completa` (
 `semillero_id` int(11)
@@ -477,7 +479,7 @@ CREATE TABLE `vista_semilleros_completa` (
 -- --------------------------------------------------------
 
 --
--- Structure for view `vista_estudiantes_por_semillero`
+-- Estructura para la vista `vista_estudiantes_por_semillero`
 --
 DROP TABLE IF EXISTS `vista_estudiantes_por_semillero`;
 
@@ -486,7 +488,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- --------------------------------------------------------
 
 --
--- Structure for view `vista_profesores_por_semillero`
+-- Estructura para la vista `vista_profesores_por_semillero`
 --
 DROP TABLE IF EXISTS `vista_profesores_por_semillero`;
 
@@ -495,25 +497,25 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- --------------------------------------------------------
 
 --
--- Structure for view `vista_semilleros_completa`
+-- Estructura para la vista `vista_semilleros_completa`
 --
 DROP TABLE IF EXISTS `vista_semilleros_completa`;
 
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vista_semilleros_completa`  AS SELECT `s`.`id` AS `semillero_id`, `s`.`nombre` AS `semillero_nombre`, `s`.`objetivo_principal` AS `objetivo_principal`, `s`.`objetivos_especificos` AS `objetivos_especificos`, `gi`.`campo_investigacion` AS `grupo_nombre`, `gi`.`codigo` AS `grupo_codigo`, (select count(0) from `semillero_estudiantes` `se` where `se`.`semillero_id` = `s`.`id` and `se`.`estado` = 'activo') AS `total_estudiantes_activos`, (select count(0) from `semillero_profesores` `sp` where `sp`.`semillero_id` = `s`.`id` and `sp`.`estado` = 'activo') AS `total_profesores_activos`, CASE WHEN (select count(0) from `semillero_estudiantes` `se` where `se`.`semillero_id` = `s`.`id` AND `se`.`estado` = 'activo') >= 2 AND (select count(0) from `semillero_profesores` `sp` where `sp`.`semillero_id` = `s`.`id` AND `sp`.`estado` = 'activo') >= 1 THEN 'VÁLIDO' ELSE 'INVÁLIDO' END AS `estado_validacion`, `s`.`created_at` AS `created_at`, `s`.`updated_at` AS `updated_at` FROM (`semilleros` `s` left join `grupos_investigacion` `gi` on(`s`.`grupo_investigacion_id` = `gi`.`id`)) ORDER BY `s`.`id` ASC ;
 
 --
--- Indexes for dumped tables
+-- Índices para tablas volcadas
 --
 
 --
--- Indexes for table `actividades`
+-- Indices de la tabla `actividades`
 --
 ALTER TABLE `actividades`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id` (`plan`);
 
 --
--- Indexes for table `estudiantes`
+-- Indices de la tabla `estudiantes`
 --
 ALTER TABLE `estudiantes`
   ADD PRIMARY KEY (`id`),
@@ -521,35 +523,35 @@ ALTER TABLE `estudiantes`
   ADD KEY `grupo_investigacion` (`grupo_investigacion`);
 
 --
--- Indexes for table `grupos_investigacion`
+-- Indices de la tabla `grupos_investigacion`
 --
 ALTER TABLE `grupos_investigacion`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `codigo` (`codigo`);
 
 --
--- Indexes for table `plan_actividades`
+-- Indices de la tabla `plan_actividades`
 --
 ALTER TABLE `plan_actividades`
   ADD PRIMARY KEY (`ID`),
   ADD KEY `ID` (`Semillero`);
 
 --
--- Indexes for table `profesores`
+-- Indices de la tabla `profesores`
 --
 ALTER TABLE `profesores`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `email` (`email`);
 
 --
--- Indexes for table `semilleros`
+-- Indices de la tabla `semilleros`
 --
 ALTER TABLE `semilleros`
   ADD PRIMARY KEY (`id`),
   ADD KEY `grupo_investigacion_id` (`grupo_investigacion_id`);
 
 --
--- Indexes for table `semillero_estudiantes`
+-- Indices de la tabla `semillero_estudiantes`
 --
 ALTER TABLE `semillero_estudiantes`
   ADD PRIMARY KEY (`id`),
@@ -559,7 +561,7 @@ ALTER TABLE `semillero_estudiantes`
   ADD KEY `idx_estado` (`estado`);
 
 --
--- Indexes for table `semillero_profesores`
+-- Indices de la tabla `semillero_profesores`
 --
 ALTER TABLE `semillero_profesores`
   ADD PRIMARY KEY (`id`),
@@ -570,94 +572,94 @@ ALTER TABLE `semillero_profesores`
   ADD KEY `idx_estado` (`estado`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT de las tablas volcadas
 --
 
 --
--- AUTO_INCREMENT for table `actividades`
+-- AUTO_INCREMENT de la tabla `actividades`
 --
 ALTER TABLE `actividades`
   MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `estudiantes`
+-- AUTO_INCREMENT de la tabla `estudiantes`
 --
 ALTER TABLE `estudiantes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `grupos_investigacion`
+-- AUTO_INCREMENT de la tabla `grupos_investigacion`
 --
 ALTER TABLE `grupos_investigacion`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT for table `plan_actividades`
+-- AUTO_INCREMENT de la tabla `plan_actividades`
 --
 ALTER TABLE `plan_actividades`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT for table `profesores`
+-- AUTO_INCREMENT de la tabla `profesores`
 --
 ALTER TABLE `profesores`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT for table `semilleros`
+-- AUTO_INCREMENT de la tabla `semilleros`
 --
 ALTER TABLE `semilleros`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT for table `semillero_estudiantes`
+-- AUTO_INCREMENT de la tabla `semillero_estudiantes`
 --
 ALTER TABLE `semillero_estudiantes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
--- AUTO_INCREMENT for table `semillero_profesores`
+-- AUTO_INCREMENT de la tabla `semillero_profesores`
 --
 ALTER TABLE `semillero_profesores`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
--- Constraints for dumped tables
+-- Restricciones para tablas volcadas
 --
 
 --
--- Constraints for table `actividades`
+-- Filtros para la tabla `actividades`
 --
 ALTER TABLE `actividades`
   ADD CONSTRAINT `actividades_ibfk_1` FOREIGN KEY (`plan`) REFERENCES `plan_actividades` (`ID`);
 
 --
--- Constraints for table `estudiantes`
+-- Filtros para la tabla `estudiantes`
 --
 ALTER TABLE `estudiantes`
   ADD CONSTRAINT `estudiantes_ibfk_1` FOREIGN KEY (`grupo_investigacion`) REFERENCES `grupos_investigacion` (`id`) ON DELETE SET NULL;
 
 --
--- Constraints for table `plan_actividades`
+-- Filtros para la tabla `plan_actividades`
 --
 ALTER TABLE `plan_actividades`
   ADD CONSTRAINT `plan_actividades_ibfk_1` FOREIGN KEY (`Semillero`) REFERENCES `semilleros` (`id`);
 
 --
--- Constraints for table `semilleros`
+-- Filtros para la tabla `semilleros`
 --
 ALTER TABLE `semilleros`
   ADD CONSTRAINT `semilleros_ibfk_1` FOREIGN KEY (`grupo_investigacion_id`) REFERENCES `grupos_investigacion` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `semillero_estudiantes`
+-- Filtros para la tabla `semillero_estudiantes`
 --
 ALTER TABLE `semillero_estudiantes`
   ADD CONSTRAINT `fk_semillero_estudiantes_estudiante` FOREIGN KEY (`estudiante_id`) REFERENCES `estudiantes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_semillero_estudiantes_semillero` FOREIGN KEY (`semillero_id`) REFERENCES `semilleros` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `semillero_profesores`
+-- Filtros para la tabla `semillero_profesores`
 --
 ALTER TABLE `semillero_profesores`
   ADD CONSTRAINT `fk_semillero_profesores_profesor` FOREIGN KEY (`profesor_id`) REFERENCES `profesores` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
