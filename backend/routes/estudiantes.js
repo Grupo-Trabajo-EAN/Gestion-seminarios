@@ -71,8 +71,9 @@ router.get("/informe/:username", (req, res) => {
       a.nombre AS actividad,
       p.Informe
     FROM estudiantes e
-    LEFT JOIN grupos_investigacion gi ON e.grupo_investigacion = gi.id
-    LEFT JOIN semilleros s ON gi.id = s.grupo_investigacion_id
+    LEFT JOIN semillero_estudiantes se ON e.id = se.estudiante_id AND se.estado = 'activo'
+    LEFT JOIN semilleros s ON se.semillero_id = s.id AND s.activo = 1
+    LEFT JOIN grupos_investigacion gi ON s.grupo_investigacion_id = gi.id
     LEFT JOIN plan_actividades p ON s.id = p.Semillero
     LEFT JOIN actividades a ON a.plan = p.ID
     WHERE e.username = ?`;
@@ -153,13 +154,13 @@ router.get("/informe/:username", (req, res) => {
       p.ID AS plan_id,
       p.Nombre AS nombre_plan,
       a.nombre AS actividad,
-      p.Informe
-    FROM estudiantes e
-    LEFT JOIN grupos_investigacion gi ON e.grupo_investigacion = gi.id
-    LEFT JOIN semilleros s ON gi.id = s.grupo_investigacion_id
-    LEFT JOIN plan_actividades p ON s.id = p.Semillero
-    LEFT JOIN actividades a ON a.plan = p.ID
-    WHERE e.username = ?`;
+      p.Informe    FROM estudiantes e
+    LEFT JOIN semillero_estudiantes se ON e.id = se.estudiante_id AND se.estado = 'activo'
+    LEFT JOIN semilleros s ON se.semillero_id = s.id AND s.activo = 1
+    LEFT JOIN grupos_investigacion gi ON s.grupo_investigacion_id = gi.id
+    LEFT JOIN plan_actividades p ON s.id = p.Semillero
+    LEFT JOIN actividades a ON a.plan = p.ID
+    WHERE e.username = ?`;
 
   db.query(query, [username], (err, results) => {
     if (err) {
@@ -205,6 +206,37 @@ router.put("/:id", (req, res) => {
       res.json({ success: true, message: "Estudiante actualizado correctamente" });
     }
   );
+});
+
+// DELETE student
+router.delete("/:id", (req, res) => {
+  const { id } = req.params;
+
+  // First check if student exists
+  const checkQuery = "SELECT id FROM estudiantes WHERE id = ?";
+  
+  db.query(checkQuery, [id], (err, results) => {
+    if (err) {
+      console.error("Error checking student:", err);
+      return res.status(500).json({ error: "Error al verificar estudiante" });
+    }
+    
+    if (results.length === 0) {
+      return res.status(404).json({ error: "Estudiante no encontrado" });
+    }
+
+    // Delete student (this will also cascade to semillero_estudiantes due to foreign key constraints)
+    const deleteQuery = "DELETE FROM estudiantes WHERE id = ?";
+    
+    db.query(deleteQuery, [id], (err, result) => {
+      if (err) {
+        console.error("Error deleting student:", err);
+        return res.status(500).json({ error: "Error al eliminar estudiante" });
+      }
+      
+      res.json({ success: true, message: "Estudiante eliminado exitosamente" });
+    });
+  });
 });
 
 

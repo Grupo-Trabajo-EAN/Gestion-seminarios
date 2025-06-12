@@ -34,7 +34,13 @@ router.get('/', (req, res) => {
 router.get('/available/estudiantes', (req, res) => {
   const query = `
     SELECT 
-      e.*,
+      e.id,
+      e.nombre,
+      e.apellido,
+      e.identificacion,
+      e.email,
+      e.carrera,
+      e.semestre,
       COALESCE(assignment_count.count, 0) as current_semilleros
     FROM estudiantes e
     LEFT JOIN (
@@ -43,13 +49,13 @@ router.get('/available/estudiantes', (req, res) => {
       WHERE estado = 'activo' 
       GROUP BY estudiante_id
     ) assignment_count ON e.id = assignment_count.estudiante_id
-    ORDER BY assignment_count.count ASC, e.nombre, e.apellido
+    ORDER BY assignment_count.count ASC, e.apellido, e.nombre
   `;
   
   db.query(query, (err, results) => {
     if (err) {
       console.error('Error fetching available students:', err);
-      return res.status(500).json({ error: 'Fallo al recuperar estudiantes disponibles' });
+      return res.status(500).json({ error: 'Error al obtener estudiantes disponibles' });
     }
     res.json(results);
   });
@@ -82,7 +88,7 @@ router.get('/:id', (req, res) => {
       gi.descripcion as grupo_descripcion
     FROM semilleros s
     LEFT JOIN grupos_investigacion gi ON s.grupo_investigacion_id = gi.id
-    WHERE s.id = ?
+    WHERE s.id = ? AND s.activo = 1
   `;
   
   db.query(query, [id], (err, results) => {
@@ -99,56 +105,7 @@ router.get('/:id', (req, res) => {
   });
 });
 
-// GET /semilleros/:id/estudiantes - Get students assigned to a specific semillero
-router.get('/:id/estudiantes', (req, res) => {
-  const { id } = req.params;
-  const query = `
-    SELECT 
-      e.*,
-      se.rol,
-      se.estado,
-      se.fecha_ingreso,
-      se.created_at as fecha_asignacion
-    FROM estudiantes e
-    INNER JOIN semillero_estudiantes se ON e.id = se.estudiante_id
-    WHERE se.semillero_id = ? AND se.estado = 'activo'
-    ORDER BY e.nombre, e.apellido
-  `;
-  
-  db.query(query, [id], (err, results) => {
-    if (err) {
-      console.error('Error fetching semillero students:', err);  
-      return res.status(500).json({ error: 'Fallo al recuperar los estudiantes del semillero' });
-    }
-    res.json(results);
-  });
-});
-
-// GET /semilleros/:id/profesores - Get professors assigned to a specific semillero
-router.get('/:id/profesores', (req, res) => {
-  const { id } = req.params;
-  const query = `
-    SELECT 
-      p.*,
-      sp.rol,
-      sp.estado,
-      sp.fecha_asignacion,
-      sp.horas_semanales
-    FROM profesores p
-    INNER JOIN semillero_profesores sp ON p.id = sp.profesor_id
-    WHERE sp.semillero_id = ? AND sp.estado = 'activo'
-    ORDER BY p.nombre, p.apellido
-  `;
-  
-  db.query(query, [id], (err, results) => {
-    if (err) {
-      console.error('Error fetching semillero professors:', err);
-      return res.status(500).json({ error: 'Fallo al recuperar los profesores del semillero' });
-    }
-    res.json(results);
-  });
-});
-
+// POST /semilleros - Create a new semillero
 router.post('/', (req, res) => {
   const { 
     nombre, 
@@ -192,7 +149,7 @@ router.post('/', (req, res) => {
       }
 
       // Insert semillero
-      const insertSemilleroQuery = 'INSERT INTO semilleros (nombre, objetivo_principal, objetivos_especificos, grupo_investigacion_id) VALUES (?, ?, ?, ?)';
+      const insertSemilleroQuery = 'INSERT INTO semilleros (nombre, objetivo_principal, objetivos_especificos, grupo_investigacion_id, activo) VALUES (?, ?, ?, ?, 1)';
       
       db.query(insertSemilleroQuery, [nombre, objetivo_principal, objetivos_especificos, grupo_investigacion_id], (err, result) => {
         if (err) {
@@ -222,7 +179,7 @@ router.post('/', (req, res) => {
                 return;
               }
               
-              const insertStudentQuery = 'INSERT INTO semillero_estudiantes (semillero_id, estudiante_id, rol, estado) VALUES (?, ?, ?, ?)';
+              const insertStudentQuery = 'INSERT INTO semillero_estudiantes (semillero_id, estudiante_id, rol, estado, fecha_ingreso) VALUES (?, ?, ?, ?, CURDATE())';
               db.query(insertStudentQuery, [semilleroId, estudianteId, rol, 'activo'], (err, result) => {
                 if (err) reject(err);
                 else resolve(result);
@@ -249,7 +206,7 @@ router.post('/', (req, res) => {
                 return;
               }
               
-              const insertProfessorQuery = 'INSERT INTO semillero_profesores (semillero_id, profesor_id, rol, estado) VALUES (?, ?, ?, ?)';
+              const insertProfessorQuery = 'INSERT INTO semillero_profesores (semillero_id, profesor_id, rol, estado, fecha_asignacion) VALUES (?, ?, ?, ?, CURDATE())';
               db.query(insertProfessorQuery, [semilleroId, profesorId, rol, 'activo'], (err, result) => {
                 if (err) reject(err);
                 else resolve(result);
@@ -291,65 +248,225 @@ router.post('/', (req, res) => {
   });
 });
 
+// PUT /semilleros/:id - Update an existing semillero
 router.put('/:id', (req, res) => {
   const { id } = req.params;
   const { nombre, objetivo_principal, objetivos_especificos, grupo_investigacion_id } = req.body;
   
-  if (!nombre || !objetivo_principal || !objetivos_especificos || !grupo_investigacion_id) {
-    return res.status(400).json({ error: 'Todos los campos son requeridos' });
+  // Check if at least one field to update is provided
+  if (!nombre && !objetivo_principal && !objetivos_especificos && !grupo_investigacion_id) {
+    return res.status(400).json({ error: 'Al menos un campo debe ser proporcionado para actualizar' });
   }
 
-  const checkGroupQuery = 'SELECT id FROM grupos_investigacion WHERE id = ?';
+  // Build dynamic query based on provided fields
+  const fieldsToUpdate = [];
+  const values = [];
   
-  db.query(checkGroupQuery, [grupo_investigacion_id], (err, groupResults) => {
-    if (err) {
-      console.error('Error checking research group:', err);
-      return res.status(500).json({ error: 'Error al verificar el grupo de investigación' });
-    }
-    
-    if (groupResults.length === 0) {
-      return res.status(400).json({ error: 'El grupo de investigación especificado no existe' });
-    }
+  if (nombre) {
+    fieldsToUpdate.push('nombre = ?');
+    values.push(nombre);
+  }
+  
+  if (objetivo_principal) {
+    fieldsToUpdate.push('objetivo_principal = ?');
+    values.push(objetivo_principal);
+  }
+  
+  if (objetivos_especificos) {
+    fieldsToUpdate.push('objetivos_especificos = ?');
+    values.push(objetivos_especificos);
+  }
+  
+  if (grupo_investigacion_id) {
+    fieldsToUpdate.push('grupo_investigacion_id = ?');
+    values.push(grupo_investigacion_id);
+  }
+  
+  values.push(id); // Add id for WHERE clause
 
-    const updateQuery = 'UPDATE semilleros SET nombre = ?, objetivo_principal = ?, objetivos_especificos = ?, grupo_investigacion_id = ? WHERE id = ?';
+  // If grupo_investigacion_id is provided, validate it exists
+  if (grupo_investigacion_id) {
+    const checkGroupQuery = 'SELECT id FROM grupos_investigacion WHERE id = ?';
     
-    db.query(updateQuery, [nombre, objetivo_principal, objetivos_especificos, grupo_investigacion_id, id], (err, result) => {
+    db.query(checkGroupQuery, [grupo_investigacion_id], (err, groupResults) => {
+      if (err) {
+        console.error('Error checking research group:', err);
+        return res.status(500).json({ error: 'Error al verificar el grupo de investigación' });
+      }
+      
+      if (groupResults.length === 0) {
+        return res.status(400).json({ error: 'El grupo de investigación especificado no existe' });
+      }
+
+      executeUpdate();
+    });
+  } else {
+    executeUpdate();
+  }
+
+  function executeUpdate() {
+    const updateQuery = `UPDATE semilleros SET ${fieldsToUpdate.join(', ')} WHERE id = ? AND activo = 1`;
+    
+    db.query(updateQuery, values, (err, result) => {
       if (err) {
         console.error('Error updating semillero:', err);
         return res.status(500).json({ error: 'Fallo al actualizar el semillero' });
       }
       
       if (result.affectedRows === 0) {
-        return res.status(404).json({ error: 'Semillero no encontrado' });
+        return res.status(404).json({ error: 'Semillero no encontrado o no está activo' });
       }
       
-      res.json({ 
-        id: parseInt(id), 
-        nombre, 
-        objetivo_principal, 
-        objetivos_especificos, 
-        grupo_investigacion_id 
+      // Return the updated fields
+      const response = { id: parseInt(id) };
+      if (nombre) response.nombre = nombre;
+      if (objetivo_principal) response.objetivo_principal = objetivo_principal;
+      if (objetivos_especificos) response.objetivos_especificos = objetivos_especificos;
+      if (grupo_investigacion_id) response.grupo_investigacion_id = grupo_investigacion_id;
+      
+      res.json(response);
+    });
+  }
+});
+
+// DELETE /semilleros/:id - Soft delete a semillero
+router.delete('/:id', (req, res) => {
+  const { id } = req.params;
+  
+  // Soft delete: set activo = 0 instead of deleting the record
+  const query = 'UPDATE semilleros SET activo = 0 WHERE id = ? AND activo = 1';
+  
+  db.query(query, [id], (err, result) => {
+    if (err) {
+      console.error('Error soft deleting semillero:', err);
+      return res.status(500).json({ error: 'Fallo al eliminar el semillero' });
+    }
+    
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Semillero no encontrado o ya está eliminado' });
+    }
+    
+    res.json({ message: 'Semillero eliminado exitosamente' });
+  });
+});
+
+// POST /semilleros/:id/estudiantes - Assign students to a semillero
+router.post('/:id/estudiantes', (req, res) => {
+  const { id: semilleroId } = req.params;
+  const { estudiantesIds } = req.body;
+
+  if (!estudiantesIds || !Array.isArray(estudiantesIds) || estudiantesIds.length === 0) {
+    return res.status(400).json({ error: 'Debe proporcionar al menos un estudiante' });
+  }
+
+  // First verify that the semillero exists and is active
+  const checkSemilleroQuery = 'SELECT id FROM semilleros WHERE id = ? AND activo = 1';
+  
+  db.query(checkSemilleroQuery, [semilleroId], (err, semilleroResults) => {
+    if (err) {
+      console.error('Error checking semillero:', err);
+      return res.status(500).json({ error: 'Error al verificar el semillero' });
+    }
+    
+    if (semilleroResults.length === 0) {
+      return res.status(404).json({ error: 'Semillero no encontrado o inactivo' });
+    }
+
+    // Check if students exist and are active
+    const checkStudentsQuery = `
+      SELECT id FROM estudiantes 
+      WHERE id IN (${estudiantesIds.map(() => '?').join(',')}) 
+      AND Estado = 'Activo'
+    `;
+    
+    db.query(checkStudentsQuery, estudiantesIds, (err, studentResults) => {
+      if (err) {
+        console.error('Error checking students:', err);
+        return res.status(500).json({ error: 'Error al verificar estudiantes' });
+      }
+      
+      if (studentResults.length !== estudiantesIds.length) {
+        return res.status(400).json({ error: 'Algunos estudiantes no existen o están inactivos' });
+      }
+
+      // Insert assignments
+      const insertQuery = `
+        INSERT INTO semillero_estudiantes (semillero_id, estudiante_id, fecha_ingreso, estado)
+        VALUES ${estudiantesIds.map(() => '(?, ?, CURDATE(), \'activo\')').join(', ')}
+        ON DUPLICATE KEY UPDATE 
+          estado = 'activo'
+      `;
+      
+      const insertValues = estudiantesIds.flatMap(estudianteId => [semilleroId, estudianteId]);
+      
+      db.query(insertQuery, insertValues, (err, result) => {
+        if (err) {
+          console.error('Error assigning students to semillero:', err);
+          return res.status(500).json({ error: 'Error al asignar estudiantes al semillero' });
+        }
+        
+        res.status(201).json({ 
+          message: 'Estudiantes asignados exitosamente',
+          assignedCount: estudiantesIds.length,
+          insertedRows: result.affectedRows
+        });
       });
     });
   });
 });
 
-router.delete('/:id', (req, res) => {
-  const { id } = req.params;
+// DELETE /semilleros/:semilleroId/estudiantes/:estudianteId - Remove student from semillero
+router.delete('/:semilleroId/estudiantes/:estudianteId', (req, res) => {
+  const { semilleroId, estudianteId } = req.params;
+
+  const updateQuery = `
+    UPDATE semillero_estudiantes 
+    SET estado = 'inactivo' 
+    WHERE semillero_id = ? AND estudiante_id = ?
+  `;
   
-  const query = 'DELETE FROM semilleros WHERE id = ?';
-  
-  db.query(query, [id], (err, result) => {
+  db.query(updateQuery, [semilleroId, estudianteId], (err, result) => {
     if (err) {
-      console.error('Error deleting semillero:', err);
-      return res.status(500).json({ error: 'Fallo al eliminar el semillero' });
+      console.error('Error removing student from semillero:', err);
+      return res.status(500).json({ error: 'Error al remover estudiante del semillero' });
     }
     
     if (result.affectedRows === 0) {
-      return res.status(404).json({ error: 'Semillero no encontrado' });
+      return res.status(404).json({ error: 'Relación estudiante-semillero no encontrada' });
     }
     
-    res.json({ message: 'Semillero eliminado exitosamente' });
+    res.json({ message: 'Estudiante removido del semillero exitosamente' });
+  });
+});
+
+// GET /semilleros/:id/estudiantes - Get students in a specific semillero  
+router.get('/:id/estudiantes', (req, res) => {
+  const { id } = req.params;
+  
+  const query = `
+    SELECT 
+      e.id,
+      e.nombre,
+      e.apellido,
+      e.identificacion,
+      e.email,
+      e.carrera,
+      e.semestre,
+      se.fecha_ingreso,
+      se.rol,
+      se.estado
+    FROM semillero_estudiantes se
+    JOIN estudiantes e ON se.estudiante_id = e.id
+    WHERE se.semillero_id = ? AND se.estado = 'activo'
+    ORDER BY e.apellido, e.nombre
+  `;
+  
+  db.query(query, [id], (err, results) => {
+    if (err) {
+      console.error('Error fetching semillero students:', err);
+      return res.status(500).json({ error: 'Error al obtener estudiantes del semillero' });
+    }
+    res.json(results);
   });
 });
 

@@ -12,6 +12,7 @@ function Semilleros() {
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSemilleroModalOpen, setIsSemilleroModalOpen] = useState(false);
+  const [isEditSemilleroModalOpen, setIsEditSemilleroModalOpen] = useState(false);
   const [gruposInvestigacion, setGruposInvestigacion] = useState([]);
   const [availableStudents, setAvailableStudents] = useState([]);
   const [availableProfessors, setAvailableProfessors] = useState([]);
@@ -23,6 +24,15 @@ function Semilleros() {
     estudiantes_ids: [],
     profesores_ids: [],
   });
+  const [editingSemillero, setEditingSemillero] = useState({
+    id: null,
+    nombre: "",
+    objetivo_principal: "",
+    objetivos_especificos: "",
+  });
+  const [isStudentManagementModalOpen, setIsStudentManagementModalOpen] = useState(false);
+  const [semilleroStudents, setSemilleroStudents] = useState([]);
+  const [selectedStudentsForAssignment, setSelectedStudentsForAssignment] = useState([]);
 
   useEffect(() => {
     fetchSemilleros();
@@ -86,6 +96,20 @@ function Semilleros() {
     }
   };
 
+  const fetchSemilleroStudents = async (semilleroId) => {
+    try {
+      const response = await fetch(`http://localhost:4000/api/semilleros/${semilleroId}/estudiantes`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch semillero students");
+      }
+      const data = await response.json();
+      setSemilleroStudents(data);
+    } catch (error) {
+      console.error("Failed to fetch semillero students:", error);
+      setSemilleroStudents([]);
+    }
+  };
+
   useEffect(() => {
     setNuevoPlan({ ...nuevoPlan, semillero: selectedId });
   }, [selectedId]);
@@ -142,9 +166,41 @@ function Semilleros() {
     });
   };
 
+  const openEditSemilleroModal = () => {
+    if (selectedId) {
+      const semillero = semilleros.find(s => s.id === selectedId);
+      if (semillero) {
+        setEditingSemillero({
+          id: semillero.id,
+          nombre: semillero.nombre,
+          objetivo_principal: semillero.objetivo_principal,
+          objetivos_especificos: semillero.objetivos_especificos,
+        });
+        setIsEditSemilleroModalOpen(true);
+      }
+    } else {
+      alert("Por favor, seleccione un semillero de la tabla primero.");
+    }
+  };
+
+  const closeEditSemilleroModal = () => {
+    setIsEditSemilleroModalOpen(false);
+    setEditingSemillero({
+      id: null,
+      nombre: "",
+      objetivo_principal: "",
+      objetivos_especificos: "",
+    });
+  };
+
   const handleSemilleroChange = (e) => {
     const { name, value } = e.target;
     setNuevoSemillero((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleEditSemilleroChange = (e) => {
+    const { name, value } = e.target;
+    setEditingSemillero((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleStudentSelection = (studentId) => {
@@ -222,6 +278,73 @@ function Semilleros() {
     }
   };
 
+  const handleEditarSemillero = async () => {
+    if (!editingSemillero.nombre.trim() || !editingSemillero.objetivo_principal.trim() || 
+        !editingSemillero.objetivos_especificos.trim()) {
+      alert("Todos los campos son obligatorios");
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:4000/api/semilleros/${editingSemillero.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nombre: editingSemillero.nombre,
+          objetivo_principal: editingSemillero.objetivo_principal,
+          objetivos_especificos: editingSemillero.objetivos_especificos,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Error al actualizar el semillero");
+      }
+
+      const result = await response.json();
+      console.log("Semillero actualizado:", result);
+
+      alert("Semillero actualizado exitosamente!");
+      closeEditSemilleroModal();
+      fetchSemilleros(); // Refresh the semilleros list
+    } catch (err) {
+      console.error("Failed to update semillero:", err);
+      alert(`Error al actualizar el semillero: ${err.message}`);
+    }
+  };
+
+  const handleEliminarSemillero = async () => {
+    if (!selectedId) {
+      alert("Por favor, seleccione un semillero de la tabla primero.");
+      return;
+    }
+
+    const semillero = semilleros.find(s => s.id === selectedId);
+    const confirmDelete = window.confirm(
+      `¿Está seguro de que desea eliminar el semillero "${semillero?.nombre}"?\n\nEsta acción ocultará el semillero de la vista pero no eliminará los datos permanentemente.`
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      const response = await fetch(`http://localhost:4000/api/semilleros/${selectedId}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Error al eliminar el semillero");
+      }
+
+      alert("Semillero eliminado exitosamente!");
+      setSelectedId(null); // Clear selection
+      fetchSemilleros(); // Refresh the semilleros list
+    } catch (err) {
+      console.error("Failed to delete semillero:", err);
+      alert(`Error al eliminar el semillero: ${err.message}`);
+    }
+  };
+
   const handlePlanNombreChange = (event) => {
     setNuevoPlan({ ...nuevoPlan, nombre: event.target.value });
   };
@@ -272,6 +395,85 @@ function Semilleros() {
     }
   };
 
+  const openStudentManagementModal = async () => {
+    if (!selectedId) {
+      alert("Por favor, seleccione un semillero primero.");
+      return;
+    }
+    
+    await fetchSemilleroStudents(selectedId);
+    await fetchAvailableStudents();
+    setIsStudentManagementModalOpen(true);
+  };
+
+  const closeStudentManagementModal = () => {
+    setIsStudentManagementModalOpen(false);
+    setSelectedStudentsForAssignment([]);
+    setSemilleroStudents([]);
+  };
+
+  const handleStudentSelectionForAssignment = (studentId) => {
+    setSelectedStudentsForAssignment(prev => 
+      prev.includes(studentId) 
+        ? prev.filter(id => id !== studentId)
+        : [...prev, studentId]
+    );
+  };
+
+  const assignStudentsToSemillero = async () => {
+    if (selectedStudentsForAssignment.length === 0) {
+      alert("Por favor, seleccione al menos un estudiante.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:4000/api/semilleros/${selectedId}/estudiantes`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ estudiantesIds: selectedStudentsForAssignment }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert(`${result.assignedCount} estudiante(s) asignado(s) exitosamente`);
+        setSelectedStudentsForAssignment([]);
+        await fetchSemilleroStudents(selectedId);
+        await fetchAvailableStudents();
+      } else {
+        alert(result.error || "Error asignando estudiantes");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Error del servidor");
+    }
+  };
+
+  const removeStudentFromSemillero = async (estudianteId) => {
+    if (!window.confirm("¿Está seguro de remover este estudiante del semillero?")) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:4000/api/semilleros/${selectedId}/estudiantes/${estudianteId}`, {
+        method: 'DELETE',
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert("Estudiante removido exitosamente");
+        await fetchSemilleroStudents(selectedId);
+        await fetchAvailableStudents();
+      } else {
+        alert(result.error || "Error removiendo estudiante");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Error del servidor");
+    }
+  };
+
   return (
     <div className="semilleros-container">
       <div className="semilleros-actions">
@@ -280,13 +482,13 @@ function Semilleros() {
         </button>
         <button
           disabled={!selectedId}
-          onClick={() => alert(`Editar semillero ${selectedId}`)}
+          onClick={openEditSemilleroModal}
         >
           Editar Seleccionado
         </button>
         <button
           disabled={!selectedId}
-          onClick={() => alert(`Eliminar semillero ${selectedId}`)}
+          onClick={handleEliminarSemillero}
         >
           Eliminar Seleccionado
         </button>
@@ -295,6 +497,12 @@ function Semilleros() {
           onClick={openModal} // Changed to open the modal
         >
           Agregar Plan Actividades
+        </button>
+        <button
+          disabled={!selectedId}
+          onClick={openStudentManagementModal}
+        >
+          Gestionar Estudiantes
         </button>
       </div>
 
@@ -452,6 +660,135 @@ function Semilleros() {
             <div className="modal-actions">
               <button onClick={handleAgregarSemillero}>Crear</button>
               <button onClick={closeSemilleroModal}>Cancelar</button>
+            </div>
+          </div>
+        </div>
+      )}
+      {isEditSemilleroModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>Editar Semillero</h3>
+            <input
+              type="text"
+              name="nombre"
+              placeholder="Nombre del Semillero"
+              value={editingSemillero.nombre}
+              onChange={handleEditSemilleroChange}
+            />
+            <textarea
+              name="objetivo_principal"
+              placeholder="Objetivo Principal"
+              value={editingSemillero.objetivo_principal}
+              onChange={handleEditSemilleroChange}
+              rows="3"
+            />
+            <textarea
+              name="objetivos_especificos"
+              placeholder="Objetivos Específicos"
+              value={editingSemillero.objetivos_especificos}
+              onChange={handleEditSemilleroChange}
+              rows="4"
+            />
+            <div className="modal-actions">
+              <button onClick={handleEditarSemillero}>Guardar Cambios</button>
+              <button onClick={closeEditSemilleroModal}>Cancelar</button>
+            </div>
+          </div>
+        </div>
+      )}
+      {isStudentManagementModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content student-management-modal">
+            <h3>Gestionar Estudiantes - Semillero {semilleros.find(s => s.id === selectedId)?.nombre}</h3>
+            
+            <div className="student-management-section">
+              <div className="current-students">
+                <h4>Estudiantes Actuales ({semilleroStudents.length})</h4>
+                <div className="students-list">
+                  {semilleroStudents.length > 0 ? (
+                    <table className="students-table-modal">
+                      <thead>
+                        <tr>
+                          <th>Nombre</th>
+                          <th>Email</th>
+                          <th>Carrera</th>
+                          <th>Fecha Ingreso</th>
+                          <th>Acciones</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {semilleroStudents.map((student) => (
+                          <tr key={student.id}>
+                            <td>{student.nombre} {student.apellido}</td>
+                            <td>{student.email}</td>
+                            <td>{student.carrera}</td>
+                            <td>{new Date(student.fecha_ingreso).toLocaleDateString()}</td>
+                            <td>
+                              <button 
+                                className="btn-remove"
+                                onClick={() => removeStudentFromSemillero(student.id)}
+                                title="Remover del semillero"
+                              >
+                                Remover
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  ) : (
+                    <p className="no-students">No hay estudiantes asignados a este semillero.</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="available-students">
+                <h4>Estudiantes Disponibles</h4>
+                <div className="students-selection">
+                  {availableStudents.length > 0 ? (
+                    <>
+                      <div className="students-grid">
+                        {availableStudents
+                          .filter(student => !semilleroStudents.some(ss => ss.id === student.id))
+                          .map((student) => (
+                          <div key={student.id} className="student-card">
+                            <label>
+                              <input
+                                type="checkbox"
+                                checked={selectedStudentsForAssignment.includes(student.id)}
+                                onChange={() => handleStudentSelectionForAssignment(student.id)}
+                              />
+                              <div className="student-info">
+                                <strong>{student.nombre} {student.apellido}</strong>
+                                <span>{student.email}</span>
+                                <span>{student.carrera} - Semestre {student.semestre}</span>
+                                <small>Semilleros activos: {student.current_semilleros}</small>
+                              </div>
+                            </label>
+                          </div>
+                        ))}
+                      </div>
+                      
+                      {selectedStudentsForAssignment.length > 0 && (
+                        <div className="assignment-actions">
+                          <button 
+                            className="btn-assign"
+                            onClick={assignStudentsToSemillero}
+                          >
+                            Asignar {selectedStudentsForAssignment.length} estudiante(s)
+                          </button>
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <p className="no-students">No hay estudiantes disponibles.</p>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="modal-buttons">
+              <button onClick={closeStudentManagementModal}>Cerrar</button>
             </div>
           </div>
         </div>

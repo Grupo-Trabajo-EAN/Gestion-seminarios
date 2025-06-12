@@ -86,6 +86,7 @@ SELECT
     s.nombre as semillero_nombre,
     s.objetivo_principal,
     s.objetivos_especificos,
+    s.activo,
     gi.campo_investigacion as grupo_nombre,
     gi.codigo as grupo_codigo,
     
@@ -97,6 +98,7 @@ SELECT
     
     -- Validar reglas de negocio
     CASE 
+        WHEN s.activo = 0 THEN 'INACTIVO'
         WHEN (SELECT COUNT(*) FROM semillero_estudiantes se WHERE se.semillero_id = s.id AND se.estado = 'activo') >= 2 
              AND (SELECT COUNT(*) FROM semillero_profesores sp WHERE sp.semillero_id = s.id AND sp.estado = 'activo') >= 1 
         THEN 'VÁLIDO' 
@@ -107,6 +109,7 @@ SELECT
     s.updated_at
 FROM semilleros s
 LEFT JOIN grupos_investigacion gi ON s.grupo_investigacion_id = gi.id
+WHERE s.activo = 1
 ORDER BY s.id;
 
 -- Vista para obtener detalles de estudiantes por semillero

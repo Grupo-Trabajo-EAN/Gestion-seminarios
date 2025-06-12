@@ -36,6 +36,7 @@ CREATE TABLE `semilleros` (
   `objetivo_principal` text NOT NULL,
   `objetivos_especificos` text NOT NULL,
   `grupo_investigacion_id` int(11) NOT NULL,
+  `activo` tinyint(1) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -44,15 +45,15 @@ CREATE TABLE `semilleros` (
 -- Volcado de datos para la tabla `semilleros`
 --
 
-INSERT INTO `semilleros` (`id`, `nombre`, `objetivo_principal`, `objetivos_especificos`, `grupo_investigacion_id`, `created_at`, `updated_at`) VALUES
-(1, 'Semillero de Machine Learning', 'Desarrollar competencias en aprendizaje automático y aplicaciones de inteligencia artificial', 'Estudiar algoritmos de ML, Implementar proyectos prácticos, Participar en competencias de datos, Publicar artículos científicos', 1, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
-(2, 'Semillero de Biotecnología Aplicada', 'Formar investigadores en biotecnología con enfoque en aplicaciones médicas y ambientales', 'Realizar experimentos de laboratorio, Desarrollar prototipos biotecnológicos, Colaborar con empresas del sector, Presentar en congresos', 2, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
-(3, 'Semillero de Energías Limpias', 'Investigar y desarrollar tecnologías de energías renovables sostenibles', 'Diseñar sistemas solares, Evaluar eficiencia energética, Crear prototipos eólicos, Analizar impacto ambiental', 3, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
-(4, 'Semillero de Innovación Social', 'Generar soluciones innovadoras para problemáticas sociales comunitarias', 'Identificar problemas sociales, Diseñar metodologías participativas, Implementar proyectos comunitarios, Evaluar impacto social', 4, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
-(5, 'Semillero de Nanociencias', 'Explorar aplicaciones de la nanotecnología en diferentes campos científicos', 'Sintetizar nanomateriales, Caracterizar propiedades, Desarrollar aplicaciones médicas, Estudiar toxicidad', 5, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
-(6, 'Semillero de Tecnología Educativa', 'Innovar en el uso de tecnologías para mejorar procesos de enseñanza-aprendizaje', 'Desarrollar aplicaciones educativas, Evaluar herramientas digitales, Capacitar docentes, Medir efectividad pedagógica', 6, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
-(7, 'Semillero de Sostenibilidad Ambiental', 'Investigar estrategias de adaptación y mitigación del cambio climático', 'Monitorear variables climáticas, Modelar escenarios futuros, Proponer medidas de adaptación, Sensibilizar comunidades', 7, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
-(8, 'Semillero de Robótica Educativa', 'Desarrollar competencias en robótica aplicada a la educación y la industria', 'Construir robots educativos, Programar sistemas autónomos, Participar en competencias, Crear talleres de robótica', 8, '2025-05-29 22:29:10', '2025-05-29 22:29:10');
+INSERT INTO `semilleros` (`id`, `nombre`, `objetivo_principal`, `objetivos_especificos`, `grupo_investigacion_id`, `activo`, `created_at`, `updated_at`) VALUES
+(1, 'Semillero de Machine Learning', 'Desarrollar competencias en aprendizaje automático y aplicaciones de inteligencia artificial', 'Estudiar algoritmos de ML, Implementar proyectos prácticos, Participar en competencias de datos, Publicar artículos científicos', 1, 1, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
+(2, 'Semillero de Biotecnología Aplicada', 'Formar investigadores en biotecnología con enfoque en aplicaciones médicas y ambientales', 'Realizar experimentos de laboratorio, Desarrollar prototipos biotecnológicos, Colaborar con empresas del sector, Presentar en congresos', 2, 1, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
+(3, 'Semillero de Energías Limpias', 'Investigar y desarrollar tecnologías de energías renovables sostenibles', 'Diseñar sistemas solares, Evaluar eficiencia energética, Crear prototipos eólicos, Analizar impacto ambiental', 3, 1, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
+(4, 'Semillero de Innovación Social', 'Generar soluciones innovadoras para problemáticas sociales comunitarias', 'Identificar problemas sociales, Diseñar metodologías participativas, Implementar proyectos comunitarios, Evaluar impacto social', 4, 1, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
+(5, 'Semillero de Nanociencias', 'Explorar aplicaciones de la nanotecnología en diferentes campos científicos', 'Sintetizar nanomateriales, Caracterizar propiedades, Desarrollar aplicaciones médicas, Estudiar toxicidad', 5, 1, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
+(6, 'Semillero de Tecnología Educativa', 'Innovar en el uso de tecnologías para mejorar procesos de enseñanza-aprendizaje', 'Desarrollar aplicaciones educativas, Evaluar herramientas digitales, Capacitar docentes, Medir efectividad pedagógica', 6, 1, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
+(7, 'Semillero de Sostenibilidad Ambiental', 'Investigar estrategias de adaptación y mitigación del cambio climático', 'Monitorear variables climáticas, Modelar escenarios futuros, Proponer medidas de adaptación, Sensibilizar comunidades', 7, 1, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
+(8, 'Semillero de Robótica Educativa', 'Desarrollar competencias en robótica aplicada a la educación y la industria', 'Construir robots educativos, Programar sistemas autónomos, Participar en competencias, Crear talleres de robótica', 8, 1, '2025-05-29 22:29:10', '2025-05-29 22:29:10');
 
 --
 -- Índices para tablas volcadas

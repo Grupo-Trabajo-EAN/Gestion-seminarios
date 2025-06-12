@@ -7,7 +7,7 @@ function Students() {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modoEdicion, setModoEdicion] = useState(false);
-
+  
   const [nuevoStudent, setNuevoStudent] = useState({
     nombre: "",
     apellido: "",
@@ -23,7 +23,9 @@ function Students() {
 
   const fetchStudents = async () => {
     try {
-      const response = await fetch("http://localhost:4000/api/estudiantes");
+      const endpoint = "http://localhost:4000/api/estudiantes"
+      
+      const response = await fetch(endpoint);
       const data = await response.json();
       setStudents(data);
       setLoading(false);

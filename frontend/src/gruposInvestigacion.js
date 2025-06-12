@@ -6,9 +6,6 @@ function GruposInvestigacion() {
   const [selectedId, setSelectedId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showModalEstudiantes, setShowModalEstudiantes] = useState(false);
-  const [estudiantesSinGrupo, setEstudiantesSinGrupo] = useState([]);
-  const [estudiantesSeleccionados, setEstudiantesSeleccionados] = useState([]);
 
   useEffect(() => {
     const fetchGrupos = async () => {
@@ -54,63 +51,12 @@ function GruposInvestigacion() {
         </div>
       </main>
     );
-  const asignarEstudiantesAGrupo = async () => {
-    if (!selectedId || estudiantesSeleccionados.length === 0) return;
-
-    try {
-      const response = await fetch(
-        "http://localhost:4000/api/grupos-investigacion/asignar-estudiantes",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            grupoId: selectedId,
-            estudiantesIds: estudiantesSeleccionados,
-          }),
-        }
-      );
-
-      const result = await response.json();
-
-      if (response.ok) {
-        alert("Estudiantes asignados correctamente");
-        setShowModalEstudiantes(false);
-        setEstudiantesSeleccionados([]);
-        // Recargar tabla si lo deseas
-      } else {
-        alert(result.error || "Error asignando estudiantes");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Error del servidor");
-    }
-  };
-
-  const openModalEstudiante = async () => {
-    try {
-      const response = await fetch("http://localhost:4000/api/estudiantes");
-      const data = await response.json();
-      const sinGrupo = data.filter((est) => !est.grupo_investigacion);
-      setEstudiantesSinGrupo(sinGrupo);
-      setShowModalEstudiantes(true);
-    } catch (err) {
-      console.error("Error al obtener estudiantes:", err);
-    }
-  };
-  const toggleSeleccionEstudiante = (id) => {
-    setEstudiantesSeleccionados((prev) =>
-      prev.includes(id) ? prev.filter((e) => e !== id) : [...prev, id]
-    );
-  };
 
   return (
     <div className="grupos-container">
       <div className="grupos-actions">
         <button onClick={() => alert("Agregar Grupo de Investigación")}>
           Agregar Grupo
-        </button>
-        <button disabled={!selectedId} onClick={() => openModalEstudiante()}>
-          Asignar estudiante
         </button>
         <button
           disabled={!selectedId}
@@ -163,57 +109,6 @@ function GruposInvestigacion() {
           ))}
         </tbody>
       </table>
-      {showModalEstudiantes && (
-        <div className="modal">
-          <div className="modal-content">
-            <h3>Selecciona estudiantes sin grupo</h3>
-            <div className="modal-table-wrapper">
-              <table className="modal-table">
-                <thead>
-                  <tr>
-                    <th></th>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Email</th>
-                    <th>Carrera</th>
-                    <th>Semestre</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {estudiantesSinGrupo.map((est) => (
-                    <tr key={est.id}>
-                      <td>
-                        <input
-                          type="checkbox"
-                          checked={estudiantesSeleccionados.includes(est.id)}
-                          onChange={() => toggleSeleccionEstudiante(est.id)}
-                        />
-                      </td>
-                      <td>{est.nombre}</td>
-                      <td>{est.apellido}</td>
-                      <td>{est.email}</td>
-                      <td>{est.carrera}</td>
-                      <td>{est.semestre}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            <div className="modal-buttons">
-              <button onClick={asignarEstudiantesAGrupo}>
-                Asignar al grupo
-              </button>
-              <button
-                className="btn-cancel"
-                onClick={() => setShowModalEstudiantes(false)}
-              >
-                Cerrar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

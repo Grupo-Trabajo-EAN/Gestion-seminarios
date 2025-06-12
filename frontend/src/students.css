@@ -146,3 +146,81 @@
 .modal-actions button:last-of-type:hover {
   background-color: #5a6268;
 }
+
+/* View toggle styles */
+.view-toggle {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.view-toggle label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+/* Relationship display styles */
+.semillero-info, .grupo-info {
+  display: block;
+}
+
+.semillero-info strong, .grupo-info strong {
+  color: #0056b3;
+  font-size: 0.9em;
+}
+
+.semillero-info small {
+  color: #6c757d;
+  font-size: 0.75em;
+}
+
+.no-semillero, .no-grupo {
+  color: #6c757d;
+  font-style: italic;
+  font-size: 0.85em;
+}
+
+/* Status badges */
+.status {
+  padding: 0.2rem 0.5rem;
+  border-radius: 3px;
+  font-size: 0.75em;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.status.activo {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status.inactivo, .status.inactive {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* Responsive table adjustments */
+@media (max-width: 1200px) {
+  .students-table {
+    font-size: 0.8rem;
+  }
+  
+  .students-table th,
+  .students-table td {
+    padding: 0.3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .students-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .view-toggle {
+    margin-left: 0;
+  }
+}

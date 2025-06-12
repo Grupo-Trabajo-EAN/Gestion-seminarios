@@ -143,40 +143,13 @@ router.delete("/:id", (req, res) => {
   });
 });
 
-// POST /api/asignar-estudiantes
+// POST /api/asignar-estudiantes - DEPRECATED
+// Students are now related to research groups through semilleros
 router.post("/asignar-estudiantes", (req, res) => {
-  const { grupoId, estudiantesIds } = req.body;
-
-  if (
-    !grupoId ||
-    !Array.isArray(estudiantesIds) ||
-    estudiantesIds.length === 0
-  ) {
-    return res.status(400).json({ error: "Datos inválidos" });
-  }
-
-  const query = "UPDATE estudiantes SET grupo_investigacion = ? WHERE id = ?";
-
-  const updates = estudiantesIds.map((id) => {
-    return new Promise((resolve, reject) => {
-      db.query(query, [grupoId, id], (err, result) => {
-        if (err) return reject(err);
-        resolve(result);
-      });
-    });
+  return res.status(400).json({ 
+    error: "Esta funcionalidad ha sido deshabilitada. Los estudiantes ahora se relacionan con grupos de investigación a través de semilleros.",
+    deprecated: true
   });
-
-  Promise.all(updates)
-    .then(() =>
-      res.json({
-        success: true,
-        message: "Estudiantes asignados correctamente",
-      })
-    )
-    .catch((err) => {
-      console.error("Error asignando estudiantes:", err);
-      res.status(500).json({ error: "Error al asignar estudiantes" });
-    });
 });
 
 module.exports = router;

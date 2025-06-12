@@ -250,6 +250,7 @@ CREATE TABLE `semilleros` (
   `objetivo_principal` text NOT NULL,
   `objetivos_especificos` text NOT NULL,
   `grupo_investigacion_id` int(11) NOT NULL,
+  `activo` tinyint(1) NOT NULL DEFAULT 1 COMMENT 'Soft delete flag: 1=active, 0=deleted',
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -258,15 +259,15 @@ CREATE TABLE `semilleros` (
 -- Volcado de datos para la tabla `semilleros`
 --
 
-INSERT INTO `semilleros` (`id`, `nombre`, `objetivo_principal`, `objetivos_especificos`, `grupo_investigacion_id`, `created_at`, `updated_at`) VALUES
-(1, 'Semillero de Machine Learning', 'Desarrollar competencias en aprendizaje automático y aplicaciones de inteligencia artificial', 'Estudiar algoritmos de ML, Implementar proyectos prácticos, Participar en competencias de datos, Publicar artículos científicos', 1, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
-(2, 'Semillero de Biotecnología Aplicada', 'Formar investigadores en biotecnología con enfoque en aplicaciones médicas y ambientales', 'Realizar experimentos de laboratorio, Desarrollar prototipos biotecnológicos, Colaborar con empresas del sector, Presentar en congresos', 2, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
-(3, 'Semillero de Energías Limpias', 'Investigar y desarrollar tecnologías de energías renovables sostenibles', 'Diseñar sistemas solares, Evaluar eficiencia energética, Crear prototipos eólicos, Analizar impacto ambiental', 3, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
-(4, 'Semillero de Innovación Social', 'Generar soluciones innovadoras para problemáticas sociales comunitarias', 'Identificar problemas sociales, Diseñar metodologías participativas, Implementar proyectos comunitarios, Evaluar impacto social', 4, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
-(5, 'Semillero de Nanociencias', 'Explorar aplicaciones de la nanotecnología en diferentes campos científicos', 'Sintetizar nanomateriales, Caracterizar propiedades, Desarrollar aplicaciones médicas, Estudiar toxicidad', 5, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
-(6, 'Semillero de Tecnología Educativa', 'Innovar en el uso de tecnologías para mejorar procesos de enseñanza-aprendizaje', 'Desarrollar aplicaciones educativas, Evaluar herramientas digitales, Capacitar docentes, Medir efectividad pedagógica', 6, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
-(7, 'Semillero de Sostenibilidad Ambiental', 'Investigar estrategias de adaptación y mitigación del cambio climático', 'Monitorear variables climáticas, Modelar escenarios futuros, Proponer medidas de adaptación, Sensibilizar comunidades', 7, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
-(8, 'Semillero de Robótica Educativa', 'Desarrollar competencias en robótica aplicada a la educación y la industria', 'Construir robots educativos, Programar sistemas autónomos, Participar en competencias, Crear talleres de robótica', 8, '2025-05-29 22:29:10', '2025-05-29 22:29:10');
+INSERT INTO `semilleros` (`id`, `nombre`, `objetivo_principal`, `objetivos_especificos`, `grupo_investigacion_id`, `activo`, `created_at`, `updated_at`) VALUES
+(1, 'Semillero de Machine Learning', 'Desarrollar competencias en aprendizaje automático y aplicaciones de inteligencia artificial', 'Estudiar algoritmos de ML, Implementar proyectos prácticos, Participar en competencias de datos, Publicar artículos científicos', 1, 1, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
+(2, 'Semillero de Biotecnología Aplicada', 'Formar investigadores en biotecnología con enfoque en aplicaciones médicas y ambientales', 'Realizar experimentos de laboratorio, Desarrollar prototipos biotecnológicos, Colaborar con empresas del sector, Presentar en congresos', 2, 1, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
+(3, 'Semillero de Energías Limpias', 'Investigar y desarrollar tecnologías de energías renovables sostenibles', 'Diseñar sistemas solares, Evaluar eficiencia energética, Crear prototipos eólicos, Analizar impacto ambiental', 3, 1, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
+(4, 'Semillero de Innovación Social', 'Generar soluciones innovadoras para problemáticas sociales comunitarias', 'Identificar problemas sociales, Diseñar metodologías participativas, Implementar proyectos comunitarios, Evaluar impacto social', 4, 1, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
+(5, 'Semillero de Nanociencias', 'Explorar aplicaciones de la nanotecnología en diferentes campos científicos', 'Sintetizar nanomateriales, Caracterizar propiedades, Desarrollar aplicaciones médicas, Estudiar toxicidad', 5, 1, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
+(6, 'Semillero de Tecnología Educativa', 'Innovar en el uso de tecnologías para mejorar procesos de enseñanza-aprendizaje', 'Desarrollar aplicaciones educativas, Evaluar herramientas digitales, Capacitar docentes, Medir efectividad pedagógica', 6, 1, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
+(7, 'Semillero de Sostenibilidad Ambiental', 'Investigar estrategias de adaptación y mitigación del cambio climático', 'Monitorear variables climáticas, Modelar escenarios futuros, Proponer medidas de adaptación, Sensibilizar comunidades', 7, 1, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
+(8, 'Semillero de Robótica Educativa', 'Desarrollar competencias en robótica aplicada a la educación y la industria', 'Construir robots educativos, Programar sistemas autónomos, Participar en competencias, Crear talleres de robótica', 8, 1, '2025-05-29 22:29:10', '2025-05-29 22:29:10');
 
 -- --------------------------------------------------------
 
@@ -278,7 +279,7 @@ CREATE TABLE `semillero_estudiantes` (
   `id` int(11) NOT NULL,
   `semillero_id` int(11) NOT NULL,
   `estudiante_id` int(11) NOT NULL,
-  `fecha_ingreso` date NOT NULL DEFAULT curdate(),
+  `fecha_ingreso` date NOT NULL DEFAULT (CURDATE()),
   `estado` enum('activo','inactivo','graduado') NOT NULL DEFAULT 'activo',
   `rol` varchar(100) DEFAULT NULL COMMENT 'Rol del estudiante en el semillero (ej: líder, investigador junior, etc.)',
   `created_at` timestamp NULL DEFAULT current_timestamp(),
@@ -355,7 +356,7 @@ CREATE TABLE `semillero_profesores` (
   `id` int(11) NOT NULL,
   `semillero_id` int(11) NOT NULL,
   `profesor_id` int(11) NOT NULL,
-  `fecha_asignacion` date NOT NULL DEFAULT curdate(),
+  `fecha_asignacion` date NOT NULL DEFAULT (CURDATE()),
   `rol` enum('director','co-director','asesor','colaborador') NOT NULL DEFAULT 'asesor',
   `estado` enum('activo','inactivo') NOT NULL DEFAULT 'activo',
   `horas_semanales` int(11) DEFAULT 2 COMMENT 'Horas semanales dedicadas al semillero',
@@ -483,7 +484,7 @@ CREATE TABLE `vista_semilleros_completa` (
 --
 DROP TABLE IF EXISTS `vista_estudiantes_por_semillero`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vista_estudiantes_por_semillero`  AS SELECT `s`.`id` AS `semillero_id`, `s`.`nombre` AS `semillero_nombre`, `e`.`id` AS `estudiante_id`, `e`.`nombre` AS `estudiante_nombre`, `e`.`apellido` AS `estudiante_apellido`, `e`.`email` AS `estudiante_email`, `e`.`carrera` AS `carrera`, `e`.`semestre` AS `semestre`, `se`.`fecha_ingreso` AS `fecha_ingreso`, `se`.`estado` AS `estado`, `se`.`rol` AS `rol` FROM ((`semilleros` `s` join `semillero_estudiantes` `se` on(`s`.`id` = `se`.`semillero_id`)) join `estudiantes` `e` on(`se`.`estudiante_id` = `e`.`id`)) ORDER BY `s`.`id` ASC, `se`.`fecha_ingreso` ASC ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vista_estudiantes_por_semillero`  AS SELECT `s`.`id` AS `semillero_id`, `s`.`nombre` AS `semillero_nombre`, `e`.`id` AS `estudiante_id`, `e`.`nombre` AS `estudiante_nombre`, `e`.`apellido` AS `estudiante_apellido`, `e`.`email` AS `estudiante_email`, `e`.`carrera` AS `carrera`, `e`.`semestre` AS `semestre`, `se`.`fecha_ingreso` AS `fecha_ingreso`, `se`.`estado` AS `estado`, `se`.`rol` AS `rol` FROM ((`semilleros` `s` join `semillero_estudiantes` `se` on(`s`.`id` = `se`.`semillero_id`)) join `estudiantes` `e` on(`se`.`estudiante_id` = `e`.`id`)) WHERE `s`.`activo` = 1 ORDER BY `s`.`id` ASC, `se`.`fecha_ingreso` ASC ;
 
 -- --------------------------------------------------------
 
@@ -492,7 +493,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `vista_profesores_por_semillero`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vista_profesores_por_semillero`  AS SELECT `s`.`id` AS `semillero_id`, `s`.`nombre` AS `semillero_nombre`, `p`.`id` AS `profesor_id`, `p`.`nombre` AS `profesor_nombre`, `p`.`apellido` AS `profesor_apellido`, `p`.`email` AS `profesor_email`, `p`.`especialidad` AS `especialidad`, `sp`.`fecha_asignacion` AS `fecha_asignacion`, `sp`.`rol` AS `rol`, `sp`.`estado` AS `estado`, `sp`.`horas_semanales` AS `horas_semanales` FROM ((`semilleros` `s` join `semillero_profesores` `sp` on(`s`.`id` = `sp`.`semillero_id`)) join `profesores` `p` on(`sp`.`profesor_id` = `p`.`id`)) ORDER BY `s`.`id` ASC, `sp`.`fecha_asignacion` ASC ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vista_profesores_por_semillero`  AS SELECT `s`.`id` AS `semillero_id`, `s`.`nombre` AS `semillero_nombre`, `p`.`id` AS `profesor_id`, `p`.`nombre` AS `profesor_nombre`, `p`.`apellido` AS `profesor_apellido`, `p`.`email` AS `profesor_email`, `p`.`especialidad` AS `especialidad`, `sp`.`fecha_asignacion` AS `fecha_asignacion`, `sp`.`rol` AS `rol`, `sp`.`estado` AS `estado`, `sp`.`horas_semanales` AS `horas_semanales` FROM ((`semilleros` `s` join `semillero_profesores` `sp` on(`s`.`id` = `sp`.`semillero_id`)) join `profesores` `p` on(`sp`.`profesor_id` = `p`.`id`)) WHERE `s`.`activo` = 1 ORDER BY `s`.`id` ASC, `sp`.`fecha_asignacion` ASC ;
 
 -- --------------------------------------------------------
 
@@ -501,7 +502,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `vista_semilleros_completa`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vista_semilleros_completa`  AS SELECT `s`.`id` AS `semillero_id`, `s`.`nombre` AS `semillero_nombre`, `s`.`objetivo_principal` AS `objetivo_principal`, `s`.`objetivos_especificos` AS `objetivos_especificos`, `gi`.`campo_investigacion` AS `grupo_nombre`, `gi`.`codigo` AS `grupo_codigo`, (select count(0) from `semillero_estudiantes` `se` where `se`.`semillero_id` = `s`.`id` and `se`.`estado` = 'activo') AS `total_estudiantes_activos`, (select count(0) from `semillero_profesores` `sp` where `sp`.`semillero_id` = `s`.`id` and `sp`.`estado` = 'activo') AS `total_profesores_activos`, CASE WHEN (select count(0) from `semillero_estudiantes` `se` where `se`.`semillero_id` = `s`.`id` AND `se`.`estado` = 'activo') >= 2 AND (select count(0) from `semillero_profesores` `sp` where `sp`.`semillero_id` = `s`.`id` AND `sp`.`estado` = 'activo') >= 1 THEN 'VÁLIDO' ELSE 'INVÁLIDO' END AS `estado_validacion`, `s`.`created_at` AS `created_at`, `s`.`updated_at` AS `updated_at` FROM (`semilleros` `s` left join `grupos_investigacion` `gi` on(`s`.`grupo_investigacion_id` = `gi`.`id`)) ORDER BY `s`.`id` ASC ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vista_semilleros_completa`  AS SELECT `s`.`id` AS `semillero_id`, `s`.`nombre` AS `semillero_nombre`, `s`.`objetivo_principal` AS `objetivo_principal`, `s`.`objetivos_especificos` AS `objetivos_especificos`, `gi`.`campo_investigacion` AS `grupo_nombre`, `gi`.`codigo` AS `grupo_codigo`, (select count(0) from `semillero_estudiantes` `se` where `se`.`semillero_id` = `s`.`id` and `se`.`estado` = 'activo') AS `total_estudiantes_activos`, (select count(0) from `semillero_profesores` `sp` where `sp`.`semillero_id` = `s`.`id` and `sp`.`estado` = 'activo') AS `total_profesores_activos`, CASE WHEN (select count(0) from `semillero_estudiantes` `se` where `se`.`semillero_id` = `s`.`id` AND `se`.`estado` = 'activo') >= 2 AND (select count(0) from `semillero_profesores` `sp` where `sp`.`semillero_id` = `s`.`id` AND `sp`.`estado` = 'activo') >= 1 THEN 'VÁLIDO' ELSE 'INVÁLIDO' END AS `estado_validacion`, `s`.`created_at` AS `created_at`, `s`.`updated_at` AS `updated_at` FROM (`semilleros` `s` left join `grupos_investigacion` `gi` on(`s`.`grupo_investigacion_id` = `gi`.`id`)) WHERE `s`.`activo` = 1 ORDER BY `s`.`id` ASC ;
 
 --
 -- Índices para tablas volcadas
@@ -548,7 +549,8 @@ ALTER TABLE `profesores`
 --
 ALTER TABLE `semilleros`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `grupo_investigacion_id` (`grupo_investigacion_id`);
+  ADD KEY `grupo_investigacion_id` (`grupo_investigacion_id`),
+  ADD KEY `idx_semilleros_activo` (`activo`);
 
 --
 -- Indices de la tabla `semillero_estudiantes`
