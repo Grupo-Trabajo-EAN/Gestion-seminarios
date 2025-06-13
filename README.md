@@ -1,6 +1,6 @@
-# Gestión de Seminarios
+# Gestión de Semilleros
 
-Este proyecto permite la gestión de estudiantes y administración de seminarios en una plataforma web con frontend, backend y base de datos MySQL.
+Este proyecto permite la gestión de estudiantes y administración de semilleros en una plataforma web con frontend, backend y base de datos MySQL.
 
 ## Estructura del Proyecto
 
