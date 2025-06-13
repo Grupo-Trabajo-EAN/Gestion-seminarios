@@ -3,13 +3,12 @@ DROP DATABASE if EXISTS semilleros;
 CREATE DATABASE semilleros;
 
 USE semilleros;
-
 -- phpMyAdmin SQL Dump
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:33078
--- Tiempo de generación: 10-06-2025 a las 18:09:52
+-- Tiempo de generación: 13-06-2025 a las 02:48:09
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -138,7 +137,6 @@ CREATE TABLE `estudiantes` (
   `carrera` varchar(100) NOT NULL,
   `semestre` int(100) NOT NULL,
   `Estado` varchar(150) NOT NULL DEFAULT 'Activo',
-  `grupo_investigacion` int(20) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -147,10 +145,10 @@ CREATE TABLE `estudiantes` (
 -- Volcado de datos para la tabla `estudiantes`
 --
 
-INSERT INTO `estudiantes` (`id`, `username`, `password`, `nombre`, `apellido`, `identificacion`, `email`, `carrera`, `semestre`, `Estado`, `grupo_investigacion`, `created_at`, `updated_at`) VALUES
-(1, 'pdelgad99203', '123456', 'Paula Catalina', 'Delgado Almendrales', '1001299203', 'pdelgad99203@universidadean.edu.co', 'ingenieria de sistemas', 5, 'Activo', 1, '2025-06-03 05:09:33', '2025-06-04 20:25:11'),
-(2, 'juan123', 'password123', 'Juan', 'Perez', '12589842', 'juan123@universidadean.edu.co', 'Ingenieria industrial', 2, 'Activo', NULL, '2025-06-03 05:17:50', '2025-06-04 21:02:32'),
-(3, 'Jesus123', '123456', 'Jesus', 'Torres', '312545', 'Jesus123@universidadean.edu.co', 'ingenieria de sistemas', 8, 'Activo', NULL, '2025-06-03 05:20:19', '2025-06-04 21:02:39');
+INSERT INTO `estudiantes` (`id`, `username`, `password`, `nombre`, `apellido`, `identificacion`, `email`, `carrera`, `semestre`, `Estado`, `created_at`, `updated_at`) VALUES
+(1, 'pdelgad99203', '123456', 'Paula Catalina', 'Delgado Almendrales', '1001299203', 'pdelgad99203@universidadean.edu.co', 'ingenieria de sistemas', 5, 'Activo', '2025-06-03 05:09:33', '2025-06-04 20:25:11'),
+(2, 'juan123', 'password123', 'Juan', 'Perez', '12589842', 'juan123@universidadean.edu.co', 'Ingenieria industrial', 2, 'Activo', '2025-06-03 05:17:50', '2025-06-04 21:02:32'),
+(3, 'Jesus123', '123456', 'Jesus', 'Torres', '312545', 'Jesus123@universidadean.edu.co', 'ingenieria de sistemas', 8, 'Activo', '2025-06-03 05:20:19', '2025-06-04 21:02:39');
 
 -- --------------------------------------------------------
 
@@ -206,7 +204,8 @@ INSERT INTO `plan_actividades` (`ID`, `Nombre`, `Informe`, `Semillero`, `estado_
 (1, 'Plan de Actividades 1 ', '', 1, 'pendiente', NULL),
 (2, 'Plan 2', '', 1, 'aprobado', '2025-06-09 19:15:45'),
 (3, 'Plan 3', '', 3, 'pendiente', NULL),
-(4, 'plan prueba', '', 6, 'aprobado', '2025-06-09 19:27:25');
+(4, 'plan prueba', '', 6, 'aprobado', '2025-06-09 19:27:25'),
+(5, 'plan prueba2', '', 2, 'pendiente', NULL);
 
 -- --------------------------------------------------------
 
@@ -260,12 +259,12 @@ CREATE TABLE `semilleros` (
 --
 
 INSERT INTO `semilleros` (`id`, `nombre`, `objetivo_principal`, `objetivos_especificos`, `grupo_investigacion_id`, `activo`, `created_at`, `updated_at`) VALUES
-(1, 'Semillero de Machine Learning', 'Desarrollar competencias en aprendizaje automático y aplicaciones de inteligencia artificial', 'Estudiar algoritmos de ML, Implementar proyectos prácticos, Participar en competencias de datos, Publicar artículos científicos', 1, 1, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
-(2, 'Semillero de Biotecnología Aplicada', 'Formar investigadores en biotecnología con enfoque en aplicaciones médicas y ambientales', 'Realizar experimentos de laboratorio, Desarrollar prototipos biotecnológicos, Colaborar con empresas del sector, Presentar en congresos', 2, 1, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
-(3, 'Semillero de Energías Limpias', 'Investigar y desarrollar tecnologías de energías renovables sostenibles', 'Diseñar sistemas solares, Evaluar eficiencia energética, Crear prototipos eólicos, Analizar impacto ambiental', 3, 1, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
+(1, 'Semillero de Machine Learning', 'Desarrollar competencias en aprendizaje automático y aplicaciones de inteligencia artificial', 'Estudiar algoritmos de ML, Implementar proyectos prácticos, Participar en competencias de datos, Publicar artículos científicos', 1, 1, '2025-05-29 22:29:10', '2025-06-13 00:46:44'),
+(2, 'Semillero de Biotecnología Aplicada', 'Formar investigadores en biotecnología con enfoque en aplicaciones médicas y ambientales', 'Realizar experimentos de laboratorio, Desarrollar prototipos biotecnológicos, Colaborar con empresas del sector, Presentar en congresos', 2, 1, '2025-05-29 22:29:10', '2025-06-13 00:46:48'),
+(3, 'Semillero de Energías Limpias', 'Investigar y desarrollar tecnologías de energías renovables sostenibles', 'Diseñar sistemas solares, Evaluar eficiencia energética, Crear prototipos eólicos, Analizar impacto ambiental', 3, 1, '2025-05-29 22:29:10', '2025-06-13 00:24:11'),
 (4, 'Semillero de Innovación Social', 'Generar soluciones innovadoras para problemáticas sociales comunitarias', 'Identificar problemas sociales, Diseñar metodologías participativas, Implementar proyectos comunitarios, Evaluar impacto social', 4, 1, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
 (5, 'Semillero de Nanociencias', 'Explorar aplicaciones de la nanotecnología en diferentes campos científicos', 'Sintetizar nanomateriales, Caracterizar propiedades, Desarrollar aplicaciones médicas, Estudiar toxicidad', 5, 1, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
-(6, 'Semillero de Tecnología Educativa', 'Innovar en el uso de tecnologías para mejorar procesos de enseñanza-aprendizaje', 'Desarrollar aplicaciones educativas, Evaluar herramientas digitales, Capacitar docentes, Medir efectividad pedagógica', 6, 1, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
+(6, 'Semillero de Tecnología Educativa', 'Innovar en el uso de tecnologías para mejorar procesos de enseñanza-aprendizaje', 'Desarrollar aplicaciones educativas, Evaluar herramientas digitales, Capacitar docentes, Medir efectividad pedagógica', 6, 1, '2025-05-29 22:29:10', '2025-06-13 00:24:35'),
 (7, 'Semillero de Sostenibilidad Ambiental', 'Investigar estrategias de adaptación y mitigación del cambio climático', 'Monitorear variables climáticas, Modelar escenarios futuros, Proponer medidas de adaptación, Sensibilizar comunidades', 7, 1, '2025-05-29 22:29:10', '2025-05-29 22:29:10'),
 (8, 'Semillero de Robótica Educativa', 'Desarrollar competencias en robótica aplicada a la educación y la industria', 'Construir robots educativos, Programar sistemas autónomos, Participar en competencias, Crear talleres de robótica', 8, 1, '2025-05-29 22:29:10', '2025-05-29 22:29:10');
 
@@ -294,7 +293,7 @@ INSERT INTO `semillero_estudiantes` (`id`, `semillero_id`, `estudiante_id`, `fec
 (1, 1, 1, '2025-01-15', 'activo', 'Líder estudiantil', '2025-06-05 04:00:00', '2025-06-05 04:00:00'),
 (2, 1, 2, '2025-02-01', 'activo', 'Investigador junior', '2025-06-05 04:00:00', '2025-06-05 04:00:00'),
 (3, 1, 3, '2025-03-10', 'activo', 'Investigador junior', '2025-06-05 04:00:00', '2025-06-05 04:00:00'),
-(4, 2, 1, '2025-01-20', 'activo', 'Investigador senior', '2025-06-05 04:00:00', '2025-06-05 04:00:00'),
+(4, 2, 1, '2025-01-20', 'inactivo', 'Investigador senior', '2025-06-05 04:00:00', '2025-06-13 00:47:04'),
 (5, 2, 3, '2025-02-15', 'activo', 'Investigador junior', '2025-06-05 04:00:00', '2025-06-05 04:00:00'),
 (6, 3, 2, '2025-01-10', 'activo', 'Líder estudiantil', '2025-06-05 04:00:00', '2025-06-05 04:00:00'),
 (7, 3, 3, '2025-02-05', 'activo', 'Investigador junior', '2025-06-05 04:00:00', '2025-06-05 04:00:00'),
@@ -308,7 +307,8 @@ INSERT INTO `semillero_estudiantes` (`id`, `semillero_id`, `estudiante_id`, `fec
 (15, 7, 2, '2025-02-20', 'activo', 'Investigador junior', '2025-06-05 04:00:00', '2025-06-05 04:00:00'),
 (16, 7, 3, '2025-03-20', 'activo', 'Investigador junior', '2025-06-05 04:00:00', '2025-06-05 04:00:00'),
 (17, 8, 1, '2025-02-01', 'activo', 'Líder estudiantil', '2025-06-05 04:00:00', '2025-06-05 04:00:00'),
-(18, 8, 2, '2025-02-25', 'activo', 'Investigador junior', '2025-06-05 04:00:00', '2025-06-05 04:00:00');
+(18, 8, 2, '2025-02-25', 'activo', 'Investigador junior', '2025-06-05 04:00:00', '2025-06-05 04:00:00'),
+(19, 2, 2, '2025-06-12', 'activo', NULL, '2025-06-13 00:23:19', '2025-06-13 00:23:19');
 
 --
 -- Disparadores `semillero_estudiantes`
@@ -520,8 +520,7 @@ ALTER TABLE `actividades`
 --
 ALTER TABLE `estudiantes`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `username` (`username`),
-  ADD KEY `grupo_investigacion` (`grupo_investigacion`);
+  ADD UNIQUE KEY `username` (`username`);
 
 --
 -- Indices de la tabla `grupos_investigacion`
@@ -599,7 +598,7 @@ ALTER TABLE `grupos_investigacion`
 -- AUTO_INCREMENT de la tabla `plan_actividades`
 --
 ALTER TABLE `plan_actividades`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `profesores`
@@ -617,7 +616,7 @@ ALTER TABLE `semilleros`
 -- AUTO_INCREMENT de la tabla `semillero_estudiantes`
 --
 ALTER TABLE `semillero_estudiantes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT de la tabla `semillero_profesores`
@@ -634,12 +633,6 @@ ALTER TABLE `semillero_profesores`
 --
 ALTER TABLE `actividades`
   ADD CONSTRAINT `actividades_ibfk_1` FOREIGN KEY (`plan`) REFERENCES `plan_actividades` (`ID`);
-
---
--- Filtros para la tabla `estudiantes`
---
-ALTER TABLE `estudiantes`
-  ADD CONSTRAINT `estudiantes_ibfk_1` FOREIGN KEY (`grupo_investigacion`) REFERENCES `grupos_investigacion` (`id`) ON DELETE SET NULL;
 
 --
 -- Filtros para la tabla `plan_actividades`

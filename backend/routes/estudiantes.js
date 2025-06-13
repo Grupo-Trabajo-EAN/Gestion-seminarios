@@ -69,14 +69,15 @@ router.get("/informe/:username", (req, res) => {
       p.ID AS plan_id,
       p.Nombre AS nombre_plan,
       a.nombre AS actividad,
-      p.Informe
+      p.Informe,
+      s.activo
     FROM estudiantes e
     LEFT JOIN semillero_estudiantes se ON e.id = se.estudiante_id AND se.estado = 'activo'
     LEFT JOIN semilleros s ON se.semillero_id = s.id AND s.activo = 1
     LEFT JOIN grupos_investigacion gi ON s.grupo_investigacion_id = gi.id
     LEFT JOIN plan_actividades p ON s.id = p.Semillero
     LEFT JOIN actividades a ON a.plan = p.ID
-    WHERE e.username = ?`;
+    WHERE e.username = ? AND s.activo = 1`;
 
   db.query(query, [username], (err, results) => {
     if (err) {
@@ -104,7 +105,6 @@ router.put("/informe/:planId", (req, res) => {
     }
   );
 });
-
 
 // Crear carpeta /uploads si no existe
 const uploadDir = path.join(__dirname, "uploads");
@@ -143,9 +143,9 @@ router.get("/informe/download/:filename", (req, res) => {
 
 // GET datos académicos del estudiante por username
 router.get("/informe/:username", (req, res) => {
-  const { username } = req.params;
+  const { username } = req.params;
 
-  const query = `
+  const query = `
     SELECT 
       e.nombre AS nombre_estudiante,
       e.id as estudiante_id,
@@ -162,13 +162,13 @@ router.get("/informe/:username", (req, res) => {
     LEFT JOIN actividades a ON a.plan = p.ID
     WHERE e.username = ?`;
 
-  db.query(query, [username], (err, results) => {
-    if (err) {
-      console.error("Error consultando datos del informe:", err);
-      return res.status(500).json({ error: "Error en la consulta" });
-    }
-    res.json(results);
-  });
+  db.query(query, [username], (err, results) => {
+    if (err) {
+      console.error("Error consultando datos del informe:", err);
+      return res.status(500).json({ error: "Error en la consulta" });
+    }
+    res.json(results);
+  });
 });
 
 router.put("/inhabilitar/:id", (req, res) => {
@@ -194,14 +194,10 @@ router.put("/inhabilitar/:id", (req, res) => {
   });
 });
 
-
-
-
-
-
 router.put("/:id", (req, res) => {
   const { id } = req.params;
-  const { nombre, apellido, identificacion, email, carrera, semestre } = req.body;
+  const { nombre, apellido, identificacion, email, carrera, semestre } =
+    req.body;
 
   if (
     !nombre ||
@@ -226,9 +222,14 @@ router.put("/:id", (req, res) => {
     (err, result) => {
       if (err) {
         console.error("Error al actualizar estudiante:", err);
-        return res.status(500).json({ error: "Error al actualizar estudiante" });
+        return res
+          .status(500)
+          .json({ error: "Error al actualizar estudiante" });
       }
-      res.json({ success: true, message: "Estudiante actualizado correctamente" });
+      res.json({
+        success: true,
+        message: "Estudiante actualizado correctamente",
+      });
     }
   );
 });
@@ -239,32 +240,29 @@ router.delete("/:id", (req, res) => {
 
   // First check if student exists
   const checkQuery = "SELECT id FROM estudiantes WHERE id = ?";
-  
+
   db.query(checkQuery, [id], (err, results) => {
     if (err) {
       console.error("Error checking student:", err);
       return res.status(500).json({ error: "Error al verificar estudiante" });
     }
-    
+
     if (results.length === 0) {
       return res.status(404).json({ error: "Estudiante no encontrado" });
     }
 
     // Delete student (this will also cascade to semillero_estudiantes due to foreign key constraints)
     const deleteQuery = "DELETE FROM estudiantes WHERE id = ?";
-    
+
     db.query(deleteQuery, [id], (err, result) => {
       if (err) {
         console.error("Error deleting student:", err);
         return res.status(500).json({ error: "Error al eliminar estudiante" });
       }
-      
+
       res.json({ success: true, message: "Estudiante eliminado exitosamente" });
     });
   });
 });
-
-
-
 
 module.exports = router;
